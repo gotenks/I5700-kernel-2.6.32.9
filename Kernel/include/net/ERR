@@ -1,0 +1,387 @@
+addrconf.h:					      struct net_device *dev,
+addrconf.h:						struct net_device *dev);
+addrconf.h:						 struct net_device *dev,
+addrconf.h:					       struct net_device *dev,
+addrconf.h:extern int			ipv6_get_lladdr(struct net_device *dev,
+addrconf.h:extern void			addrconf_join_solict(struct net_device *dev,
+addrconf.h:extern int ipv6_dev_mc_inc(struct net_device *dev, const struct in6_addr *addr);
+addrconf.h:extern int ipv6_dev_mc_dec(struct net_device *dev, const struct in6_addr *addr);
+addrconf.h:extern int ipv6_chk_mcast_addr(struct net_device *dev,
+addrconf.h:extern void addrconf_prefix_rcv(struct net_device *dev, u8 *opt, int len);
+addrconf.h:extern int ipv6_dev_ac_inc(struct net_device *dev, struct in6_addr *addr);
+addrconf.h:extern int ipv6_chk_acast_addr(struct net *net, struct net_device *dev,
+addrconf.h:__in6_dev_get(struct net_device *dev)
+addrconf.h:in6_dev_get(struct net_device *dev)
+arp.h:			 struct net_device *dev, __be32 src_ip,
+arp.h:extern int	arp_mc_map(__be32 addr, u8 *haddr, struct net_device *dev, int dir);
+arp.h:extern void	arp_ifdown(struct net_device *dev);
+arp.h:				  struct net_device *dev, __be32 src_ip,
+atmclip.h:	struct net_device *next;	/* next CLIP interface */
+ax25.h:	struct net_device	*dev;
+ax25.h:	struct net_device	*dev;
+ax25.h:	struct net_device	*forward;
+ax25.h:static inline __be16 ax25_type_trans(struct sk_buff *skb, struct net_device *dev)
+ax25.h:struct sock *ax25_find_listener(ax25_address *, int, struct net_device *, int);
+ax25.h:extern ax25_cb *ax25_find_cb(ax25_address *, ax25_address *, ax25_digi *, struct net_device *);
+ax25.h:static inline ax25_dev *ax25_dev_ax25dev(struct net_device *dev)
+ax25.h:extern void ax25_dev_device_up(struct net_device *);
+ax25.h:extern void ax25_dev_device_down(struct net_device *);
+ax25.h:extern struct net_device *ax25_fwd_dev(struct net_device *);
+ax25.h:	struct net_device *);
+ax25.h:extern void ax25_listen_release(ax25_address *, struct net_device *);
+ax25.h:extern int  ax25_listen_mine(ax25_address *, struct net_device *);
+ax25.h:extern int  ax25_kiss_rcv(struct sk_buff *, struct net_device *, struct packet_type *, struct net_device *);
+ax25.h:extern int ax25_hard_header(struct sk_buff *, struct net_device *,
+ax25.h:extern ax25_cb *ax25_send_frame(struct sk_buff *, int, ax25_address *, ax25_address *, ax25_digi *, struct net_device *);
+ax25.h:extern void ax25_queue_xmit(struct sk_buff *skb, struct net_device *dev);
+ax25.h:extern void ax25_rt_device_down(struct net_device *);
+ax25.h:extern ax25_route *ax25_get_route(ax25_address *addr, struct net_device *dev);
+ax25.h:extern void ax25_return_dm(struct net_device *, ax25_address *, ax25_address *, ax25_digi *);
+cfg80211.h:	struct net_device *vlan;
+cfg80211.h:	struct net_device *dev;
+cfg80211.h:	int	(*del_virtual_intf)(struct wiphy *wiphy, struct net_device *dev);
+cfg80211.h:				       struct net_device *dev,
+cfg80211.h:	int	(*add_key)(struct wiphy *wiphy, struct net_device *netdev,
+cfg80211.h:	int	(*get_key)(struct wiphy *wiphy, struct net_device *netdev,
+cfg80211.h:	int	(*del_key)(struct wiphy *wiphy, struct net_device *netdev,
+cfg80211.h:				   struct net_device *netdev,
+cfg80211.h:					struct net_device *netdev,
+cfg80211.h:	int	(*add_beacon)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*set_beacon)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*del_beacon)(struct wiphy *wiphy, struct net_device *dev);
+cfg80211.h:	int	(*add_station)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*del_station)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*change_station)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*get_station)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*dump_station)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*add_mpath)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*del_mpath)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*change_mpath)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*get_mpath)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*dump_mpath)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:				struct net_device *dev,
+cfg80211.h:				struct net_device *dev,
+cfg80211.h:	int	(*change_bss)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*scan)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*auth)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*assoc)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*deauth)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*disassoc)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*connect)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*disconnect)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*join_ibss)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:	int	(*leave_ibss)(struct wiphy *wiphy, struct net_device *dev);
+cfg80211.h:	int	(*set_wds_peer)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h:				    struct net_device *dev,
+cfg80211.h:	int	(*set_power_mgmt)(struct wiphy *wiphy, struct net_device *dev,
+cfg80211.h: * that uses the ieee80211_ptr field in struct net_device
+cfg80211.h:	struct net_device *netdev;
+cfg80211.h:int cfg80211_wext_giwname(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwmode(struct net_device *dev, struct iw_request_info *info,
+cfg80211.h:int cfg80211_wext_giwmode(struct net_device *dev, struct iw_request_info *info,
+cfg80211.h:int cfg80211_wext_siwscan(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwscan(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwmlme(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwrange(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwgenie(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwauth(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwauth(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwfreq(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwfreq(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwessid(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwessid(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwrate(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwrate(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwrts(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwrts(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwfrag(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwfrag(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwretry(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwretry(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwencodeext(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwencode(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwencode(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwtxpower(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwtxpower(struct net_device *dev,
+cfg80211.h:struct iw_statistics *cfg80211_wireless_stats(struct net_device *dev);
+cfg80211.h:int cfg80211_wext_siwpower(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwpower(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_siwap(struct net_device *dev,
+cfg80211.h:int cfg80211_wext_giwap(struct net_device *dev,
+cfg80211.h:void cfg80211_send_rx_auth(struct net_device *dev, const u8 *buf, size_t len);
+cfg80211.h:void cfg80211_send_auth_timeout(struct net_device *dev, const u8 *addr);
+cfg80211.h:void cfg80211_send_rx_assoc(struct net_device *dev, const u8 *buf, size_t len);
+cfg80211.h:void cfg80211_send_assoc_timeout(struct net_device *dev, const u8 *addr);
+cfg80211.h:void cfg80211_send_deauth(struct net_device *dev, const u8 *buf, size_t len,
+cfg80211.h:void cfg80211_send_disassoc(struct net_device *dev, const u8 *buf, size_t len,
+cfg80211.h:void cfg80211_michael_mic_failure(struct net_device *dev, const u8 *addr,
+cfg80211.h:void cfg80211_ibss_joined(struct net_device *dev, const u8 *bssid, gfp_t gfp);
+cfg80211.h:void cfg80211_connect_result(struct net_device *dev, const u8 *bssid,
+cfg80211.h:void cfg80211_roamed(struct net_device *dev, const u8 *bssid,
+cfg80211.h:void cfg80211_disconnected(struct net_device *dev, u16 reason,
+datalink.h:        int     (*rcvfunc)(struct sk_buff *, struct net_device *,
+datalink.h:                                struct packet_type *, struct net_device *);
+dcbnl.h:	u8   (*getstate)(struct net_device *);
+dcbnl.h:	u8   (*setstate)(struct net_device *, u8);
+dcbnl.h:	void (*getpermhwaddr)(struct net_device *, u8 *);
+dcbnl.h:	void (*setpgtccfgtx)(struct net_device *, int, u8, u8, u8, u8);
+dcbnl.h:	void (*setpgbwgcfgtx)(struct net_device *, int, u8);
+dcbnl.h:	void (*setpgtccfgrx)(struct net_device *, int, u8, u8, u8, u8);
+dcbnl.h:	void (*setpgbwgcfgrx)(struct net_device *, int, u8);
+dcbnl.h:	void (*getpgtccfgtx)(struct net_device *, int, u8 *, u8 *, u8 *, u8 *);
+dcbnl.h:	void (*getpgbwgcfgtx)(struct net_device *, int, u8 *);
+dcbnl.h:	void (*getpgtccfgrx)(struct net_device *, int, u8 *, u8 *, u8 *, u8 *);
+dcbnl.h:	void (*getpgbwgcfgrx)(struct net_device *, int, u8 *);
+dcbnl.h:	void (*setpfccfg)(struct net_device *, int, u8);
+dcbnl.h:	void (*getpfccfg)(struct net_device *, int, u8 *);
+dcbnl.h:	u8   (*setall)(struct net_device *);
+dcbnl.h:	u8   (*getcap)(struct net_device *, int, u8 *);
+dcbnl.h:	u8   (*getnumtcs)(struct net_device *, int, u8 *);
+dcbnl.h:	u8   (*setnumtcs)(struct net_device *, int, u8);
+dcbnl.h:	u8   (*getpfcstate)(struct net_device *);
+dcbnl.h:	void (*setpfcstate)(struct net_device *, u8);
+dcbnl.h:	void (*getbcncfg)(struct net_device *, int, u32 *);
+dcbnl.h:	void (*setbcncfg)(struct net_device *, int, u32);
+dcbnl.h:	void (*getbcnrp)(struct net_device *, int, u8 *);
+dcbnl.h:	void (*setbcnrp)(struct net_device *, int, u8);
+dcbnl.h:	u8   (*setapp)(struct net_device *, u8, u16, u8);
+dcbnl.h:	u8   (*getapp)(struct net_device *, u8, u16);
+dn_dev.h:	int  (*up)(struct net_device *);
+dn_dev.h:	void (*down)(struct net_device *);
+dn_dev.h:	void (*timer3)(struct net_device *, struct dn_ifaddr *ifa);
+dn_dev.h:	struct net_device *dev;
+dn_dev.h:extern void dn_dev_up(struct net_device *);
+dn_dev.h:extern void dn_dev_down(struct net_device *);
+dn_dev.h:extern int dn_dev_set_default(struct net_device *dev, int force);
+dn_dev.h:extern struct net_device *dn_dev_get_default(void);
+dn_dev.h:static inline int dn_dev_islocal(struct net_device *dev, __le16 addr)
+dn_fib.h:	struct net_device	*nh_dev;
+dn.h:extern unsigned dn_mss_from_pmtu(struct net_device *dev, int mtu);
+dn_neigh.h:extern int dn_neigh_elist(struct net_device *dev, unsigned char *ptr, int n);
+dn_route.h:	struct net_device *dev = skb->dev;
+dst.h:	struct net_device       *dev;
+dst_ops.h:struct net_device;
+dst_ops.h:					  struct net_device *dev, int how);
+garp.h:	struct net_device	*dev;
+garp.h:extern int	garp_init_applicant(struct net_device *dev,
+garp.h:extern void	garp_uninit_applicant(struct net_device *dev,
+garp.h:extern int	garp_request_join(const struct net_device *dev,
+garp.h:extern void	garp_request_leave(const struct net_device *dev,
+ieee802154_netdev.h: * This should be located at net_device->ml_priv
+ieee802154_netdev.h:	int (*assoc_req)(struct net_device *dev,
+ieee802154_netdev.h:	int (*assoc_resp)(struct net_device *dev,
+ieee802154_netdev.h:	int (*disassoc_req)(struct net_device *dev,
+ieee802154_netdev.h:	int (*start_req)(struct net_device *dev,
+ieee802154_netdev.h:	int (*scan_req)(struct net_device *dev,
+ieee802154_netdev.h:	u16 (*get_pan_id)(struct net_device *dev);
+ieee802154_netdev.h:	u16 (*get_short_addr)(struct net_device *dev);
+ieee802154_netdev.h:	u8 (*get_dsn)(struct net_device *dev);
+ieee802154_netdev.h:	u8 (*get_bsn)(struct net_device *dev);
+ieee802154_netdev.h:		struct net_device *dev)
+if_inet6.h:	struct net_device		*dev;
+ip6_route.h:extern struct dst_entry *icmp6_dst_alloc(struct net_device *dev,
+ip6_route.h:						    struct net_device *dev);
+ip6_route.h:						    struct net_device *dev,
+ip6_route.h:extern int			rt6_route_rcv(struct net_device *dev,
+ip6_route.h:						   struct net_device *dev,
+ip6_route.h:extern void rt6_ifdown(struct net *net, struct net_device *dev);
+ip6_route.h:extern void rt6_mtu_change(struct net_device *dev, unsigned mtu);
+ip6_tunnel.h:	struct net_device *dev;	/* virtual device associated with tunnel */
+ip_fib.h:	struct net_device	*nh_dev;
+ip_fib.h:			       struct net_device *dev, __be32 *spec_dst,
+ip_fib.h:extern int ip_fib_check_default(__be32 gw, struct net_device *dev);
+ip_fib.h:extern int fib_sync_down_dev(struct net_device *dev, int force);
+ip_fib.h:extern int fib_sync_up(struct net_device *dev);
+ip.h:struct net_device;
+ip.h:extern int		ip_rcv(struct sk_buff *skb, struct net_device *dev,
+ip.h:			       struct packet_type *pt, struct net_device *orig_dev);
+ipip.h:	struct net_device	*dev;
+ipv6.h:					 struct net_device *dev, 
+ipv6.h:					 struct net_device *orig_dev);
+ipv6.h:					   struct net_device *dev,
+ipx.h:	struct net_device	*if_dev;
+irda/irlap.h:	struct net_device  *netdev;
+irda/irlap.h:struct irlap_cb *irlap_open(struct net_device *dev, struct qos_info *qos,
+irda/irda_device.h:	struct net_device *dev;           /* Device we are attached to */
+irda/irda_device.h:	int (*set_mode)(struct net_device *, int mode);
+irda/irda_device.h:	int (*read)(struct net_device *dev, __u8 *buf, int len);
+irda/irda_device.h:	int (*write)(struct net_device *dev, __u8 *buf, int len);
+irda/irda_device.h:	int (*set_dtr_rts)(struct net_device *dev, int dtr, int rts);
+irda/irda_device.h:struct irlap_cb *irlap_open(struct net_device *dev, struct qos_info *qos,
+irda/irda_device.h:void irda_device_set_media_busy(struct net_device *dev, int status);
+irda/irda_device.h:int  irda_device_is_media_busy(struct net_device *dev);
+irda/irda_device.h:int  irda_device_is_receiving(struct net_device *dev);
+irda/irda_device.h:static inline int irda_device_txqueue_empty(const struct net_device *dev)
+irda/irda_device.h:int  irda_device_set_raw_mode(struct net_device* self, int status);
+irda/irda_device.h:struct net_device *alloc_irdadev(int sizeof_priv);
+irda/irlan_eth.h:struct net_device *alloc_irlandev(const char *name);
+irda/irlan_common.h:	struct net_device *dev;        /* Ethernet device structure*/
+irda/irlan_common.h:	struct net_device_stats stats;
+irda/irda.h:struct net_device;
+irda/irda.h:extern int irlap_driver_rcv(struct sk_buff *skb, struct net_device *dev,
+irda/irda.h:			    struct net_device *orig_dev);
+irda/irttp.h:	struct net_device_stats stats;
+irda/wrapper.h:void async_unwrap_char(struct net_device *dev, struct net_device_stats *stats,
+iw_handler.h: * The initial API also defines a specific handler in struct net_device
+iw_handler.h: *	static int mydriver_ioctl_setrate(struct net_device *dev, 
+iw_handler.h: *	static int mydriver_ioctl_setrate(struct net_device *dev,
+iw_handler.h:struct net_device;
+iw_handler.h:typedef int (*iw_handler)(struct net_device *dev, struct iw_request_info *info,
+iw_handler.h: * This will be linked from net_device in <linux/netdevice.h>
+iw_handler.h:	/* New location of get_wireless_stats, to de-bloat struct net_device.
+iw_handler.h:	 * The old pointer in struct net_device will be gradually phased
+iw_handler.h:	struct iw_statistics*	(*get_wireless_stats)(struct net_device *dev);
+iw_handler.h: * Access to this data follow the same rules as any other struct net_device
+iw_handler.h: * data (i.e. valid as long as struct net_device exist, same locking rules).
+iw_handler.h:extern void wireless_send_event(struct net_device *	dev,
+iw_handler.h:extern int iw_handler_set_spy(struct net_device *	dev,
+iw_handler.h:extern int iw_handler_get_spy(struct net_device *	dev,
+iw_handler.h:extern int iw_handler_set_thrspy(struct net_device *	dev,
+iw_handler.h:extern int iw_handler_get_thrspy(struct net_device *	dev,
+iw_handler.h:extern void wireless_spy_update(struct net_device *	dev,
+lapb.h:	struct net_device	*dev;
+llc_conn.h:	struct net_device   *dev;		/* device to send to remote */
+llc.h:struct net_device;
+llc.h:				     struct net_device *dev,
+llc.h:				     struct net_device *orig_dev);
+llc.h:extern int llc_rcv(struct sk_buff *skb, struct net_device *dev,
+llc.h:		   struct packet_type *pt, struct net_device *orig_dev);
+llc.h:					       struct net_device *dev,
+llc.h:					       struct net_device *orig_dev));
+llc_sap.h:struct net_device;
+llc_sap.h:extern struct sk_buff *llc_alloc_frame(struct sock *sk, struct net_device *dev,
+ndisc.h:struct net_device;
+ndisc.h:extern void			ndisc_send_ns(struct net_device *dev,
+ndisc.h:extern void			ndisc_send_rs(struct net_device *dev,
+ndisc.h:extern int			ndisc_mc_map(struct in6_addr *addr, char *buf, struct net_device *dev, int dir);
+ndisc.h:extern struct sk_buff		*ndisc_build_skb(struct net_device *dev,
+ndisc.h:					       struct net_device *dev,
+ndisc.h:static inline struct neighbour * ndisc_get_neigh(struct net_device *dev, const struct in6_addr *addr)
+neighbour.h:	struct net_device *dev;
+neighbour.h:	struct net_device		*dev;
+neighbour.h:	struct net_device	*dev;
+neighbour.h:	__u32			(*hash)(const void *pkey, const struct net_device *);
+neighbour.h:					     struct net_device *dev);
+neighbour.h:					     struct net_device *dev);
+neighbour.h:extern void			neigh_changeaddr(struct neigh_table *tbl, struct net_device *dev);
+neighbour.h:extern int			neigh_ifdown(struct neigh_table *tbl, struct net_device *dev);
+neighbour.h:						struct net_device *dev);
+neighbour.h:extern struct neigh_parms	*neigh_parms_alloc(struct net_device *dev, struct neigh_table *tbl);
+neighbour.h:extern struct pneigh_entry	*pneigh_lookup(struct neigh_table *tbl, struct net *net, const void *key, struct net_device *dev, int creat);
+neighbour.h:						 struct net_device *dev);
+neighbour.h:extern int			pneigh_delete(struct neigh_table *tbl, struct net *net, const void *key, struct net_device *dev);
+neighbour.h:extern int			neigh_sysctl_register(struct net_device *dev, 
+neighbour.h:__neigh_lookup(struct neigh_table *tbl, const void *pkey, struct net_device *dev, int creat)
+neighbour.h:  struct net_device *dev)
+netfilter/nf_nat_rule.h:			    const struct net_device *in,
+netfilter/nf_nat_rule.h:			    const struct net_device *out,
+netfilter/ipv6/nf_conntrack_ipv6.h:			       struct net_device *in,
+netfilter/ipv6/nf_conntrack_ipv6.h:			       struct net_device *out,
+netfilter/nf_queue.h:	struct net_device	*indev;
+netfilter/nf_queue.h:	struct net_device	*outdev;
+netfilter/nf_tproxy_core.h:		      const struct net_device *in, bool listening);
+netfilter/nf_log.h:		      const struct net_device *in,
+netfilter/nf_log.h:		      const struct net_device *out,
+netfilter/nf_log.h:		   const struct net_device *in,
+netfilter/nf_log.h:		   const struct net_device *out,
+netfilter/nfnetlink_log.h:		  const struct net_device *in,
+netfilter/nfnetlink_log.h:		  const struct net_device *out,
+net_namespace.h:struct net_device;
+net_namespace.h:	struct net_device       *loopback_dev;          /* The loopback */
+net_namespace.h:extern int register_pernet_device(struct pernet_operations *);
+net_namespace.h:extern void unregister_pernet_device(struct pernet_operations *);
+netrom.h:	struct net_device		*device;
+netrom.h:	struct net_device	*dev;
+netrom.h:extern int  nr_rx_frame(struct sk_buff *, struct net_device *);
+netrom.h:extern int  nr_rx_ip(struct sk_buff *, struct net_device *);
+netrom.h:extern void nr_setup(struct net_device *);
+netrom.h:extern void nr_rt_device_down(struct net_device *);
+netrom.h:extern struct net_device *nr_dev_first(void);
+netrom.h:extern struct net_device *nr_dev_get(ax25_address *);
+nl802154.h:struct net_device;
+nl802154.h:int ieee802154_nl_assoc_indic(struct net_device *dev,
+nl802154.h:int ieee802154_nl_assoc_confirm(struct net_device *dev,
+nl802154.h:int ieee802154_nl_disassoc_indic(struct net_device *dev,
+nl802154.h:int ieee802154_nl_disassoc_confirm(struct net_device *dev,
+nl802154.h:int ieee802154_nl_scan_confirm(struct net_device *dev,
+nl802154.h:int ieee802154_nl_beacon_indic(struct net_device *dev, u16 panid,
+nl802154.h:int ieee802154_nl_start_confirm(struct net_device *dev, u8 status);
+p8022.h:					 struct net_device *dev,
+p8022.h:					 struct net_device *orig_dev));
+phonet/pn_dev.h:struct phonet_device_list {
+phonet/pn_dev.h:struct phonet_device_list *phonet_device_list(struct net *net);
+phonet/pn_dev.h:struct phonet_device {
+phonet/pn_dev.h:	struct net_device *netdev;
+phonet/pn_dev.h:int phonet_device_init(void);
+phonet/pn_dev.h:void phonet_device_exit(void);
+phonet/pn_dev.h:struct net_device *phonet_device_get(struct net *net);
+phonet/pn_dev.h:int phonet_address_add(struct net_device *dev, u8 addr);
+phonet/pn_dev.h:int phonet_address_del(struct net_device *dev, u8 addr);
+phonet/pn_dev.h:u8 phonet_address_get(struct net_device *dev, u8 addr);
+phonet/pn_dev.h:void phonet_address_notify(int event, struct net_device *dev, u8 addr);
+pkt_cls.h:	struct net_device *dev;
+pkt_sched.h:extern struct Qdisc *qdisc_lookup(struct net_device *dev, u32 handle);
+pkt_sched.h:extern struct Qdisc *qdisc_lookup_class(struct net_device *dev, u32 handle);
+pkt_sched.h:			   struct net_device *dev, struct netdev_queue *txq,
+pkt_sched.h:static inline unsigned psched_mtu(const struct net_device *dev)
+psnap.h:		     int (*rcvfunc)(struct sk_buff *, struct net_device *,
+psnap.h:				    struct net_device *orig_dev));
+rose.h:	struct net_device		*dev;
+rose.h:	struct net_device		*device;
+rose.h:extern int  rose_rx_call_request(struct sk_buff *, struct net_device *, struct rose_neigh *, unsigned int);
+rose.h:extern void  rose_setup(struct net_device *);
+rose.h:extern void rose_rt_device_down(struct net_device *);
+rose.h:extern void rose_link_device_down(struct net_device *);
+rose.h:extern struct net_device *rose_dev_first(void);
+rose.h:extern struct net_device *rose_dev_get(rose_address *);
+route.h:				       __be32 src, struct net_device *dev);
+route.h:extern int		ip_route_input(struct sk_buff*, __be32 dst, __be32 src, u8 tos, struct net_device *devin);
+route.h:extern unsigned short	ip_rt_frag_needed(struct net *net, struct iphdr *iph, unsigned short new_mtu, struct net_device *dev);
+route.h:extern unsigned		inet_dev_addr_type(struct net *net, const struct net_device *dev, __be32 addr);
+rtnetlink.h: *	@priv_size: sizeof net_device private space
+rtnetlink.h: *	@setup: net_device setup function
+rtnetlink.h:	void			(*setup)(struct net_device *dev);
+rtnetlink.h:	int			(*newlink)(struct net_device *dev,
+rtnetlink.h:	int			(*changelink)(struct net_device *dev,
+rtnetlink.h:	void			(*dellink)(struct net_device *dev);
+rtnetlink.h:	size_t			(*get_size)(const struct net_device *dev);
+rtnetlink.h:					     const struct net_device *dev);
+rtnetlink.h:	size_t			(*get_xstats_size)(const struct net_device *dev);
+rtnetlink.h:					       const struct net_device *dev);
+rtnetlink.h:extern struct net_device *rtnl_create_link(struct net *net, char *ifname,
+sch_generic.h:static inline struct net_device *qdisc_dev(struct Qdisc *qdisc)
+sch_generic.h:extern void dev_init_scheduler(struct net_device *dev);
+sch_generic.h:extern void dev_shutdown(struct net_device *dev);
+sch_generic.h:extern void dev_activate(struct net_device *dev);
+sch_generic.h:extern void dev_deactivate(struct net_device *dev);
+sch_generic.h:extern struct Qdisc *qdisc_create_dflt(struct net_device *dev,
+sch_generic.h:static inline void qdisc_reset_all_tx(struct net_device *dev)
+sch_generic.h:static inline bool qdisc_all_tx_empty(const struct net_device *dev)
+sch_generic.h:static inline bool qdisc_tx_changing(struct net_device *dev)
+sch_generic.h:static inline bool qdisc_tx_is_noop(const struct net_device *dev)
+sctp/structs.h:					  struct net_device *);
+stp.h:			       struct net_device *);
+tc_act/tc_mirred.h:	struct net_device	*tcfm_dev;
+wext.h:extern struct iw_statistics *get_wireless_stats(struct net_device *dev);
+wimax.h:struct net_device;
+wimax.h: * @net_dev: [fill] Pointer to the &struct net_device this WiMAX
+wimax.h: *     Protect the driver's net_device->open() against succeeding if
+wimax.h:	struct net_device *net_dev;
+wimax.h:extern int wimax_dev_add(struct wimax_dev *, struct net_device *);
+wimax.h:struct wimax_dev *net_dev_to_wimax(struct net_device *net_dev)
+wimax.h: * Properly referenced means: the 'struct net_device' that embeds the
+x25device.h:static inline __be16 x25_type_trans(struct sk_buff *skb, struct net_device *dev)
+x25.h:	struct net_device	*dev;
+x25.h:	struct net_device	*dev;
+x25.h:	struct net_device	*dev1;
+x25.h:	struct net_device	*dev2;
+x25.h:extern int  x25_lapb_receive_frame(struct sk_buff *, struct net_device *, struct packet_type *, struct net_device *);
+x25.h:extern void x25_clear_forward_by_dev(struct net_device *);
+x25.h:extern void x25_link_device_up(struct net_device *);
+x25.h:extern void x25_link_device_down(struct net_device *);
+x25.h:extern struct x25_neigh *x25_get_neigh(struct net_device *);
+x25.h:extern struct net_device *x25_dev_get(char *);
+x25.h:extern void x25_route_device_down(struct net_device *dev);
+xfrm.h:struct net_device;
+xfrm.h:					    struct net_device *dev);
+xfrm.h:extern void xfrm_dst_ifdown(struct dst_entry *dst, struct net_device *dev);
