@@ -36,6 +36,7 @@ fi
 
 KERNEL_DIR=$PWD_DIR/Kernel
 MODULES_DIR=$PWD_DIR/modules
+CTNG_BIN_DIR=/opt/ctng/bin
 
 
 prepare_kernel()
@@ -78,7 +79,7 @@ build_modules()
 		make KDIR=$KERNEL_DIR
 		if [ -e ./*.ko ]
 		then
-		    cp ./*.ko ~/i5700.2/initramfs/lib/modules
+		    cp ./*.ko  $KERNEL_DIR/../initramfs/lib/modules
 		fi
 	done 
 
@@ -113,7 +114,16 @@ build_kernel()
 	if [ $? != 0 ] ; then
 		exit $?
 	fi
+
+	cp $KERNEL_DIR/drivers/net/wireless/bcm4325/dhd.ko   $KERNEL_DIR/../initramfs/lib/modules
+	cp $KERNEL_DIR/net/netfilter/xt_TCPMSS.ko            $KERNEL_DIR/../initramfs/lib/modules
+	cp $KERNEL_DIR/drivers/net/tun.ko                    $KERNEL_DIR/../initramfs/lib/modules
+
+	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/dhd.ko
+	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/xt_TCPMSS.ko
+	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/tun.ko
  
+	make
 }
 
 

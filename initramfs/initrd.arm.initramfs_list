@@ -19,6 +19,8 @@ file /lib/modules/vibrator.ko            ../initramfs/lib/modules/vibrator.ko   
 file /lib/modules/xsr_stl.ko             ../initramfs/lib/modules/xsr_stl.ko        0644 0 0
 file /lib/modules/xsr.ko                 ../initramfs/lib/modules/xsr.ko            0644 0 0
 file /lib/modules/xsr_debug.ko           ../initramfs/lib/modules/xsr_debug.ko      0644 0 0
+file /lib/modules/xt_TCPMSS.ko           ../initramfs/lib/modules/xt_TCPMSS.ko      0644 0 0
+file /lib/modules/tun.ko                 ../initramfs/lib/modules/tun.ko            0644 0 0
 
 dir  /sbin 0755 0 0
 file /sbin/su                            ../initramfs/sbin/su                       6755 0 0
@@ -47,13 +49,13 @@ file /res/images/progress_bar_left_round.png        ../initramfs/res/images/prog
 file /res/images/progress_bar_empty_left_round.png  ../initramfs/res/images/progress_bar_empty_left_round.png  0644 0 0
 
 dir  /sys 0755 0 0
-file /sys/stgloc                         ../initramfs/sys/stgloc  0644 0 0
+#file /sys/stgloc                         ../initramfs/sys/stgloc  0644 0 0
 
 dir  /proc 0755 0 0
-file /proc/stgloc                        ../initramfs/proc/stgloc 0644 0 0
+#file /proc/stgloc                        ../initramfs/proc/stgloc 0644 0 0
 
 dir  /dev 0755 0 0
-file /dev/stgloc                         ../initramfs/dev/stgloc  0644 0 0
+#file /dev/stgloc                         ../initramfs/dev/stgloc  0644 0 0
 
 dir  /tmp 0755 0 0
 file /tmp/s3c-keypad-rev0020.kl          ../initramfs/tmp/s3c-keypad-rev0020.kl      0644 0 0

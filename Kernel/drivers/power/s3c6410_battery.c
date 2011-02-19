@@ -36,8 +36,6 @@
 
 #include "s3c6410_battery.h"
 
-#define dev_dbg(x...) 
-
 static struct wake_lock vbus_wake_lock;
 #if (defined __TEST_DEVICE_DRIVER__  || defined __ALWAYS_AWAKE_DEVICE__)
 static struct wake_lock wake_lock_for_dev;
@@ -55,6 +53,11 @@ static struct wake_lock wake_lock_for_dev;
 #include <linux/i2c.h>
 #include "fuel_gauge.c"
 #endif /* __FUEL_GAUGES_IC__ */
+
+#ifdef dev_dbg
+    #undef dev_dbg
+#endif
+#define dev_dbg(x...) 
 
 /* Prototypes */
 extern int s3c_adc_get_adc_data(int channel);
@@ -316,7 +319,7 @@ static int s3c_bat_get_adc_data(adc_channel_type adc_ch)
 
 	for (i = 0; i < ADC_DATA_ARR_SIZE; i++) {
 		adc_arr[i] = s3c_adc_get_adc_data_ex(adc_ch);
-		dev_dbg(dev, "%s: adc_arr = %d\n", __func__, adc_arr[i]);
+		//dev_dbg(dev, "%s: adc_arr = %d\n", __func__, adc_arr[i]);
 		if (i != 0) {
 			if (adc_arr[i] > adc_max) 
 				adc_max = adc_arr[i];
