@@ -20,7 +20,7 @@ all:
 		SUBDIRS=$(CURDIR) modules
 
 clean:
-	rm -f *.ko *.mod.c *.mod.o *~ .*.cmd .*.o.cmd Module.symvers modules.order $(obj-m)
+	rm -f *.o *.ko *.mod.c *.mod.o *~ .*.cmd .*.o.cmd Module.symvers modules.order $(obj-m)
 
 install:
 	@$(MAKE) --no-print-directory -C $(KDIR) \

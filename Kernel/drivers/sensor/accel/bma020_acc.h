@@ -4,7 +4,8 @@
 #include "bma020_i2c.h"
 #include "bma020.h"
 
-#define ACC_DEV_NAME "accelerometer"
+//#define ACC_DEV_NAME "accelerometer"
+#define ACC_DEV_NAME "bma150"
 #define ACC_DEV_MAJOR 241
 
 #define BMA150_MAJOR 	100

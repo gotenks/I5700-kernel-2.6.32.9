@@ -36,6 +36,8 @@
 
 #include "s3c6410_battery.h"
 
+#define dev_dbg(x...) 
+
 static struct wake_lock vbus_wake_lock;
 #if (defined __TEST_DEVICE_DRIVER__  || defined __ALWAYS_AWAKE_DEVICE__)
 static struct wake_lock wake_lock_for_dev;
