@@ -101,7 +101,7 @@ err_mosi:
 
 err_clk:
 	return err;
-	
+
 }
 
 inline void s3cfb_spi_lcd_dclk(int ch, int value)
@@ -171,4 +171,3 @@ inline void s3cfb_spi_set_lcd_data(int ch)
 }
 
 #endif
-

@@ -125,6 +125,7 @@ void free_send_end_irq(void)
 
 static irqreturn_t send_end_irq_handler(int irq, void *dev_id);
 static irqreturn_t send_end_second_irq_handler(int irq, void *dev_id);
+
 static void send_end_enable_timer_handler(unsigned long arg)
 {
 	struct sec_gpio_info   *send_end = &hi->port.send_end;
@@ -135,10 +136,10 @@ static void send_end_enable_timer_handler(unsigned long arg)
         send_end_second = &hi->port.send_end_second;	
       
 	if((gpio_get_value(GPIO_MONOHEAD_DET)==1)&&(system_rev>=0x80))
-    {
-    	wake_unlock(&headset_sendend_wake_lock);
-    	wake_unlock(&headset_sendend_second_wake_lock);    	
-    	SEC_HEADSET_DBG("detect_3pole_earphone detected, token is %d", send_end_irq_token);
+	{
+    		wake_unlock(&headset_sendend_wake_lock);
+    		wake_unlock(&headset_sendend_second_wake_lock);    	
+    		SEC_HEADSET_DBG("detect_3pole_earphone detected, token is %d", send_end_irq_token);
 	}
 	else
 #endif  
@@ -159,7 +160,7 @@ static void send_end_enable_timer_handler(unsigned long arg)
 }
 static void send_end_press_work_handler(struct work_struct *ignored)
 {
-	SEC_HEADSET_DBG(" >> Pressed");
+	SEC_HEADSET_DBG(" >> Pressed called");
 
 	switch_set_state(&switch_sendend, 1);
 	input_report_key(hi->input, KEYCODE_SENDEND, 1);
@@ -167,16 +168,16 @@ static void send_end_press_work_handler(struct work_struct *ignored)
 }
 static void send_end_release_work_handler(struct work_struct *ignored)
 {
+	SEC_HEADSET_DBG(" >> Released called");
+
 	switch_set_state(&switch_sendend, 0);
 	input_report_key(hi->input, KEYCODE_SENDEND, 0);
 	input_sync(hi->input);
-
-	SEC_HEADSET_DBG(" >> Released");
 }
 #ifdef FEATURE_SUPPORT_NEW_SENDEND
 static void send_end_second_press_work_handler(struct work_struct *ignored)
 {
-	SEC_HEADSET_DBG(" >> Pressed");
+	SEC_HEADSET_DBG(" >> Pressed called");
 
 	switch_set_state(&switch_sendend, 1);
 	input_report_key(hi->input, KEYCODE_SENDEND, 1);
@@ -184,11 +185,11 @@ static void send_end_second_press_work_handler(struct work_struct *ignored)
 }
 static void send_end_second_release_work_handler(struct work_struct *ignored)
 {
+	SEC_HEADSET_DBG(" >> Released called");
+
 	switch_set_state(&switch_sendend, 0);
 	input_report_key(hi->input, KEYCODE_SENDEND, 0);
 	input_sync(hi->input);
-
-	SEC_HEADSET_DBG(" >> Released");
 }
 
 #endif
@@ -199,13 +200,22 @@ static void ear_adc_caculrator(unsigned long arg)
 	struct sec_gpio_info   *det_headset = &hi->port.det_headset;
 	int state = gpio_get_value(det_headset->gpio) ^ det_headset->low_active;
 
+	SEC_HEADSET_DBG(" state : %d", state);
+
 	if (state)
 	{
 		adc = s3c_adc_get_adc_data(3);//headset adc port is 3
-		if(adc < 3155 && adc > 3140)
+		if((adc > 1700 && adc < 2000) || (adc > 2400 && adc < 2700) || (adc > 2900 && adc < 3400) || (adc > 400 && adc < 700))
 		{
 			SEC_HEADSET_DBG("4pole ear-mic attached adc is %d, send_end interrupt enable 2sec after", adc);
-        		switch_set_state(&switch_earjack, state);
+			switch_set_state(&switch_earjack, state);
+			send_end_enable_timer.expires = get_jiffies_64() + (20*HZ/10);//2sec HZ is 200
+			add_timer(&send_end_enable_timer);
+		}
+		else if(adc < 3155 && adc > 3140)
+		{
+			SEC_HEADSET_DBG("4pole ear-mic attached adc is %d, send_end interrupt enable 2sec after", adc);
+			switch_set_state(&switch_earjack, state);
 			send_end_enable_timer.expires = get_jiffies_64() + (20*HZ/10);//2sec HZ is 200
 			add_timer(&send_end_enable_timer);
 		}
@@ -213,12 +223,12 @@ static void ear_adc_caculrator(unsigned long arg)
 		else if(adc < 5)
 		{
 			SEC_HEADSET_DBG("3pole earphone attached adc is %d", adc);
-        		switch_set_state(&switch_earjack, state);
+			switch_set_state(&switch_earjack, state);
 		}
 		else
 		{
 			SEC_HEADSET_DBG("Wrong adc value adc is %d", adc);
-        		switch_set_state(&switch_earjack, state);
+			switch_set_state(&switch_earjack, state);
 		}
 
 	}
@@ -241,15 +251,18 @@ static void ear_switch_change(struct work_struct *ignored)
 	struct sec_gpio_info   *send_end_second;
 #endif
 	int state;
+
 #ifdef FEATURE_SUPPORT_NEW_SENDEND
-    if(system_rev>=0x80)
-        send_end_second = &hi->port.send_end_second;	
+	if(system_rev>=0x80)
+		send_end_second = &hi->port.send_end_second;	
 #endif
 	del_timer(&send_end_enable_timer);
 #ifdef USING_ADC_FOR_EAR_DETECTING
 	cancel_delayed_work_sync(&ear_adc_cal_work);
 #endif
 	state = gpio_get_value(det_headset->gpio) ^ det_headset->low_active;
+
+	SEC_HEADSET_DBG(" state : %d", state);
 
 	if (state && !send_end_irq_token)
 	{
@@ -260,12 +273,14 @@ static void ear_switch_change(struct work_struct *ignored)
 #else
 		SEC_HEADSET_DBG("Headset attached, send end enable 2sec after");
 #ifdef FEATURE_SUPPORT_NEW_SENDEND
+#if 0
        // if(system_rev>=0x80) {
 // James	    	gpio_set_value(GPIO_MICBIAS_EN, 1); //enable VMIC_2.8V
 	    	gpio_set_value(GPIO_EAR_MIC_BIAS, 0); //Injection Ear Mic Bias	
        // }
+#endif       
 #endif
-       	switch_set_state(&switch_earjack, state);
+       		switch_set_state(&switch_earjack, state);
 		headset_status = state;
 		send_end_enable_timer.expires = get_jiffies_64() + (5*HZ/10);//2sec HZ is 200
 		add_timer(&send_end_enable_timer);
@@ -280,8 +295,10 @@ static void ear_switch_change(struct work_struct *ignored)
 		gpio_set_value(GPIO_MICBIAS_EN, 0);
 #endif
 #ifdef FEATURE_SUPPORT_NEW_SENDEND
+#if 0
      //   if(system_rev>=0x80)
     		gpio_set_value(GPIO_EAR_MIC_BIAS, 1); //Injection Ear Mic Bias		
+#endif
 #endif
 
 		// if headset is ejected while sendend is pressed
@@ -324,6 +341,8 @@ static void sendend_switch_change(struct work_struct *ignored)
 	headset_state = gpio_get_value(det_headset->gpio) ^ det_headset->low_active;
 	state = gpio_get_value(send_end->gpio) ^ send_end->low_active;
 
+	SEC_HEADSET_DBG(" headset_state : %d,  state : %d", headset_state ,state);
+
 	if(headset_state && send_end_irq_token) {
 		if(!state) {
 			wake_unlock(&headset_sendend_wake_lock);
@@ -356,6 +375,8 @@ static void sendend_second_switch_change(struct work_struct *ignored)
 #endif
 	headset_state = gpio_get_value(det_headset->gpio) ^ det_headset->low_active;
 	state = gpio_get_value(send_end_second->gpio) ^ send_end_second->low_active;
+
+	SEC_HEADSET_DBG(" headset_state : %d,  state : %d", headset_state ,state);
 
 	if(headset_state && send_end_irq_token) {
 		if(!state) {
@@ -433,26 +454,25 @@ static irqreturn_t send_end_irq_handler(int irq, void *dev_id)
 	headset_state = gpio_get_value(det_headset->gpio) ^ det_headset->low_active;
 
 	if (headset_state) {
-	irq_jiffies = jiffies_64;
+		irq_jiffies = jiffies_64;
 		state = gpio_get_value(send_end->gpio) ^ send_end->low_active;
 	
-	/* Pressed */
+		/* Pressed */
 		if (state) {
 			SEC_HEADSET_DBG(" >> 1");
-		pressed_jiffies = irq_jiffies;
-		schedule_work(&sendend_switch_work);
-	}
-	/* Released */
-	else
-	{
-		/* ignore shortkey */
-		if (irq_jiffies - pressed_jiffies < SHORTKEY_JIFFIES) {
-				SEC_HEADSET_DBG(" >> Canceled");
-			cancel_delayed_work_sync(&sendend_press_work);
-			wake_unlock(&headset_sendend_wake_lock);
-		}	
-			else {
+			pressed_jiffies = irq_jiffies;
 			schedule_work(&sendend_switch_work);
+		}
+		/* Released */
+		else
+		{
+			/* ignore shortkey */
+			if (irq_jiffies - pressed_jiffies < SHORTKEY_JIFFIES) {
+				SEC_HEADSET_DBG(" >> Canceled");
+				cancel_delayed_work_sync(&sendend_press_work);
+				wake_unlock(&headset_sendend_wake_lock);
+			} else {
+				schedule_work(&sendend_switch_work);
 				SEC_HEADSET_DBG(" >> 2");
 			}
 		}
@@ -471,25 +491,25 @@ static irqreturn_t send_end_second_irq_handler(int irq, void *dev_id)
 	headset_state = gpio_get_value(det_headset->gpio) ^ det_headset->low_active;
 
 	if (headset_state) {
-	irq_jiffies = jiffies_64;
+		irq_jiffies = jiffies_64;
 		state = gpio_get_value(send_end_second->gpio) ^ send_end_second->low_active;
 
-	/* Pressed */
+		/* Pressed */
 		if (state) {
 			SEC_HEADSET_DBG(" >> 1");
-		pressed_jiffies = irq_jiffies;
-		schedule_work(&sendend_second_switch_work);
-	}
-	/* Released */
-		else {
-		/* ignore shortkey */
-		if (irq_jiffies - pressed_jiffies < SHORTKEY_JIFFIES) {
-				SEC_HEADSET_DBG(" >> Canceled");
-			cancel_delayed_work_sync(&sendend_second_press_work);
-			wake_unlock(&headset_sendend_second_wake_lock);
-		}	
-			else {
+			pressed_jiffies = irq_jiffies;
 			schedule_work(&sendend_second_switch_work);
+		}
+		/* Released */
+		else {
+			/* ignore shortkey */
+			if (irq_jiffies - pressed_jiffies < SHORTKEY_JIFFIES) {
+				SEC_HEADSET_DBG(" >> Canceled");
+				cancel_delayed_work_sync(&sendend_second_press_work);
+				wake_unlock(&headset_sendend_second_wake_lock);
+			}	
+			else {
+				schedule_work(&sendend_second_switch_work);
 				SEC_HEADSET_DBG(" >> 2");
 			}
 		}
@@ -501,8 +521,6 @@ static irqreturn_t send_end_second_irq_handler(int irq, void *dev_id)
 
 static int sec_headset_probe(struct platform_device *pdev)
 {
-	SEC_HEADSET_DBG("");
-	
 	int ret;
 	struct sec_headset_platform_data *pdata = pdev->dev.platform_data;
 	struct sec_gpio_info   *det_headset;
@@ -511,11 +529,16 @@ static int sec_headset_probe(struct platform_device *pdev)
 	struct sec_gpio_info   *send_end_second;
 #endif
 	struct input_dev       *input;
+
+	SEC_HEADSET_DBG("");
+
 #ifdef FEATURE_SUPPORT_NEW_SENDEND
+#if 0
    // if(system_rev>=0x80)
         gpio_set_value(GPIO_EAR_MIC_BIAS, 1); //go low
   //  else
   //      ;
+#endif
 #endif
 	printk(KERN_INFO "SEC HEADSET: Registering headset driver\n");
 	hi = kzalloc(sizeof(struct sec_headset_info), GFP_KERNEL);
@@ -572,12 +595,13 @@ static int sec_headset_probe(struct platform_device *pdev)
 #ifdef FEATURE_SUPPORT_NEW_SENDEND
     if(system_rev>=0x80)
     {
+#if 0    
 		if (gpio_is_valid(GPIO_EAR_MIC_BIAS)) {
 			if (gpio_request(GPIO_EAR_MIC_BIAS, S3C_GPIO_LAVEL(GPIO_EAR_MIC_BIAS))) 
 				printk(KERN_ERR "Failed to request GPIO_EAR_MIC_BIAS! \n");
 			gpio_direction_output(GPIO_EAR_MIC_BIAS, 0);
 		}
-
+#endif
 		if (gpio_is_valid(GPIO_MICBIAS_EN)) {
 			if (gpio_request(GPIO_MICBIAS_EN, S3C_GPIO_LAVEL(GPIO_MICBIAS_EN))) 
 				printk(KERN_ERR "Failed to request GPIO_MICBIAS_EN! \n");

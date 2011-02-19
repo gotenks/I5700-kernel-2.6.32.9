@@ -404,7 +404,7 @@ static struct sleep_save onenand_save[] = {
 
 #ifdef CONFIG_S3C_PM_DEBUG
 
-extern void printascii(const char *);
+//extern void printascii(const char *);
 void pm_dbg(const char *fmt, ...)
 {
 	va_list va;
@@ -414,7 +414,8 @@ void pm_dbg(const char *fmt, ...)
 	vsprintf(buff, fmt, va);
 	va_end(va);
 
-	printascii(buff);
+	//printascii(buff);
+	printk(buff);
 }
 
 

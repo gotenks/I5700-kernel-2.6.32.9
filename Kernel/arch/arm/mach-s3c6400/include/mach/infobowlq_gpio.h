@@ -22,7 +22,7 @@
 
 #define CONFIG_RESERVED_MEM_CMM_JPEG_MFC_POST_CAMERA
 
-#define __FUEL_GAUGES_IC_MAX17043__
+//#define __FUEL_GAUGES_IC_MAX17043__
 
 /*
  * GPIO Configuration
@@ -57,6 +57,13 @@
 
 #define GPIO_MONOHEAD_DET			S3C64XX_GPL(13) 
 #define GPIO_MONOHEAD_DET_AF			3
+
+#define GPIO_CHG_EN				S3C64XX_GPK(0)
+#define GPIO_CHG_EN_AF				1
+
+#define GPIO_CHG_ING_N				S3C64XX_GPM(2)
+#define GPIO_CHG_ING_N_AF			3
+
 
 
 
@@ -121,8 +128,8 @@
 #define GPIO_EAR_MIC_BIAS			S3C64XX_GPK(2)
 #define GPIO_EAR_MIC_BIAS_AF			1
 
-#define GPIO_MICBIAS_EN				S3C64XX_GPK(3)
-#define GPIO_MICBIAS_EN_AF			1
+//#define GPIO_MICBIAS_EN				S3C64XX_GPK(3)
+//#define GPIO_MICBIAS_EN_AF			1
 
 #define GPIO_CAM_FLASH_SET			S3C64XX_GPH(1)
 #define GPIO_CAM_FLASH_SET_AF			1
