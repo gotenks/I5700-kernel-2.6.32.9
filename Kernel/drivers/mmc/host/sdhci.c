@@ -34,6 +34,7 @@
 #include <linux/irq.h>
 #include <linux/wakelock.h> //kimhyuns_add
 
+#define S3C_ACMD_MODE
 
 extern struct wake_lock sdcard_scan_wake_lock; //kimhyuns_add
 
@@ -46,6 +47,8 @@ extern struct wake_lock sdcard_scan_wake_lock; //kimhyuns_add
 	defined(CONFIG_MMC_SDHCI_MODULE))
 #define SDHCI_USE_LEDS_CLASS
 #endif
+
+//#define TRY_USE_TFLASH_EN /* does not exist on Spica */
 
 #define TFLASH_PORT_NUM 0
 #if defined(CONFIG_MACH_QUATTRO)	//cky 20100217 suspend/resume
@@ -214,12 +217,12 @@ static void sdhci_set_card_detection(struct sdhci_host *host, bool enable)
 
 static void sdhci_enable_card_detection(struct sdhci_host *host)
 {
-	//sdhci_set_card_detection(host, true);   - ijihyun.jung wifi froyo
+	//sdhci_set_card_detection(host, true);   // ijihyun.jung wifi froyo
 }
 
 static void sdhci_disable_card_detection(struct sdhci_host *host)
 {
-	//sdhci_set_card_detection(host, false);   - ijihyun.jung wifi froyo
+	//sdhci_set_card_detection(host, false);  // ijihyun.jung wifi froyo
 }
 
 static void sdhci_reset(struct sdhci_host *host, u8 mask)
@@ -266,9 +269,9 @@ static void sdhci_init(struct sdhci_host *host)
 
 	sdhci_clear_set_irqs(host, SDHCI_INT_ALL_MASK,
 		SDHCI_INT_BUS_POWER | SDHCI_INT_DATA_END_BIT |
-		SDHCI_INT_DATA_CRC | SDHCI_INT_DATA_TIMEOUT | SDHCI_INT_INDEX |
-		SDHCI_INT_END_BIT | SDHCI_INT_CRC | SDHCI_INT_TIMEOUT |
-		SDHCI_INT_DATA_END | SDHCI_INT_RESPONSE);
+		SDHCI_INT_DATA_CRC  | SDHCI_INT_DATA_TIMEOUT | SDHCI_INT_INDEX   |
+		SDHCI_INT_END_BIT   | SDHCI_INT_CRC          | SDHCI_INT_TIMEOUT |
+		SDHCI_INT_DATA_END  | SDHCI_INT_RESPONSE);
 }
 
 static void sdhci_reinit(struct sdhci_host *host)
@@ -1527,6 +1530,8 @@ static void sdhci_busy_check_timer(unsigned long data)
 
 static void sdhci_cmd_irq(struct sdhci_host *host, u32 intmask)
 {
+	//DBG( "%s:%s nr=%d intmask=%x\n", __FILE__, __func__ , host->hwport, intmask);
+
 	BUG_ON(intmask == 0);
 
 	if (!host->cmd) {
@@ -1605,6 +1610,8 @@ static void sdhci_show_adma_error(struct sdhci_host *host) { }
 
 static void sdhci_data_irq(struct sdhci_host *host, u32 intmask)
 {
+	//DBG( "%s:%s nr=%d intmask=%x\n", __FILE__, __func__ , host->hwport, intmask);
+
 	BUG_ON(intmask == 0);
 
 	if (!host->data) {
@@ -1754,6 +1761,8 @@ static irqreturn_t sdhci_irq_cd(int irq, void *dev_id)
 	int eint_num = 0;
 	unsigned int eint0msk;
 
+	//DBG( "%s:%s\n", __FILE__, __func__ );
+
 	spin_lock(&host->lock);
 	
 	mdelay(1);
@@ -1766,11 +1775,13 @@ static irqreturn_t sdhci_irq_cd(int irq, void *dev_id)
 	if(ext_CD_int) 
 	{
 		card_detect = 0;
+#ifdef TRY_USE_TFLASH_EN
 		//if( system_rev >= 0x40 )
 		{
 			gpio_set_value(GPIO_TFLASH_EN, 0);
-			printk(KERN_INFO DRIVER_NAME ": TFLASH_EN OFF\n");
+			printk(KERN_INFO DRIVER_NAME ": TFLASH_EN OFF in %s()\n", __func__);
 		}
+#endif
 		eint0msk = __raw_readl(S3C64XX_EINT0MASK);
 		eint0msk |= (1 << eint_num);
 		__raw_writel(eint0msk, S3C64XX_EINT0MASK);
@@ -1781,11 +1792,13 @@ static irqreturn_t sdhci_irq_cd(int irq, void *dev_id)
 		wake_lock_timeout(&sdcard_scan_wake_lock, 4*HZ);
 		card_detect = 1;
 		g_rescan_retry = 1;
+#ifdef TRY_USE_TFLASH_EN
 		//if( system_rev >= 0x40 )
 		{
 			gpio_set_value(GPIO_TFLASH_EN, 1);
-			printk(KERN_INFO DRIVER_NAME ": TFLASH_EN ON\n");
+			printk(KERN_INFO DRIVER_NAME ": TFLASH_EN ON in %s()\n", __func__);
 		}
+#endif
 	}
 
 	printk("CARD DETECTION = %d\n", (__raw_readl(S3C64XX_GPNDAT) & 0x40) ? 0 : 1);	// jaehyun_a 20101021
@@ -1812,9 +1825,11 @@ void sdhci_set_scanflags(void)
 	{
 		card_detect = 0;//kimhyuns 0->1
 
+#ifdef TRY_USE_TFLASH_EN
 		gpio_set_value(GPIO_TFLASH_EN, 0);//kimhyuns 0->1
-		printk(KERN_INFO DRIVER_NAME ": TFLASH_EN OFF\n");
-
+		printk(KERN_INFO DRIVER_NAME ": TFLASH_EN OFF in %s()\n", __func__);
+#endif
+                
 #if 0 //kimhyuns . 		
 		eint0msk = __raw_readl(S3C64XX_EINT0MASK);
 		eint0msk |= (1 << eint_num);
@@ -1827,10 +1842,10 @@ void sdhci_set_scanflags(void)
 		wake_lock_timeout(&sdcard_scan_wake_lock, 4*HZ);
 		card_detect = 1;
 		g_rescan_retry = 1;
-
+#ifdef TRY_USE_TFLASH_EN
 		gpio_set_value(GPIO_TFLASH_EN, 1);
-		printk(KERN_INFO DRIVER_NAME ": TFLASH_EN ON\n");
-
+		printk(KERN_INFO DRIVER_NAME ": TFLASH_EN ON in %s()\n", __func__);
+#endif
 	}
 
 }
@@ -1843,7 +1858,7 @@ void sdhci_set_scanflags(void)
 
 #ifdef CONFIG_PM
 
-#if 0	// jaehyun_a 20101022  R880 only
+#if 0
 int sdhci_suspend_host(struct sdhci_host *host, pm_message_t state)
 {
 	int ret;
@@ -1865,55 +1880,9 @@ int sdhci_suspend_host(struct sdhci_host *host, pm_message_t state)
 
 	return 0;
 }
-#else
-int sdhci_suspend_host(struct sdhci_host *host, pm_message_t state)
-{
-	int ret = 0;
-
-	if(host->mmc)
-	{
-		if(host->hwport != 2)
-		{
-	ret = mmc_suspend_host(host->mmc, state);
-	if (ret)
-		return ret;
-		}
-		else
-		{ 
-			if(dhdpm.suspend != NULL)
-			{
-			    dhdpm.suspend();
-			}
-			else
-			{
-			    printk("[WIFI] %s: dhdpm.suspend=NULL \n",__FUNCTION__);
-			}
-			
-			sdhci_dumpregs(host);
-			writel(0, host->ioaddr + SDHCI_INT_ENABLE);
-
-			clk_disable(host->clk_io);
-			clk_disable(host->clk_bus);	
-			
-		}
-		
-		if(host->irq)
-		{
-	free_irq(host->irq, host);
-		}
-		if(host->irq_cd)
-		{
-			free_irq(host->irq_cd, host);
-		}
-	}
-
-	return 0;
-}
-#endif
-
 EXPORT_SYMBOL_GPL(sdhci_suspend_host);
+
 extern int extra_eint0pend;
-#if 0 // jaehyun_a 20101022  R880 only
 int sdhci_resume_host(struct sdhci_host *host)
 {
 	int ret;
@@ -1951,7 +1920,58 @@ int sdhci_resume_host(struct sdhci_host *host)
 	sdhci_enable_card_detection(host);
 	return 0;
 }
+
+EXPORT_SYMBOL_GPL(sdhci_resume_host);
+
 #else
+
+int sdhci_suspend_host(struct sdhci_host *host, pm_message_t state)
+{
+	int ret = 0;
+
+	if(host->mmc)
+	{
+		if(host->hwport != 2)
+		{
+	ret = mmc_suspend_host(host->mmc, state);
+	if (ret)
+		return ret;
+		}
+		else
+		{ 
+			if(dhdpm.suspend != NULL)
+			{
+			    dhdpm.suspend();
+			}
+			else
+			{
+			    printk("[WIFI] %s: dhdpm.suspend=NULL \n",__FUNCTION__);
+			}
+			
+			sdhci_dumpregs(host);
+			writel(0, host->ioaddr + SDHCI_INT_ENABLE);
+
+			clk_disable(host->clk_io);
+			clk_disable(host->clk_bus);	
+			
+		}
+		
+		if(host->irq)
+		{
+			free_irq(host->irq, host);
+		}
+		if(host->hwport == TFLASH_PORT_NUM) 
+		if(host->irq_cd)
+		{
+			free_irq(host->irq_cd, host);
+		}
+	}
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(sdhci_suspend_host);
+
+extern int extra_eint0pend;
 int sdhci_resume_host(struct sdhci_host *host)
 {
 	int ret = 0;
@@ -1964,14 +1984,29 @@ int sdhci_resume_host(struct sdhci_host *host)
 			host->ops->enable_dma(host);
 		}
 
+		#if 1
+		if(host->hwport == TFLASH_PORT_NUM) {
+			set_irq_type(host->irq_cd,IRQ_TYPE_EDGE_BOTH);
+			ret = request_irq(host->irq_cd, sdhci_irq_cd, IRQF_DISABLED, mmc_hostname(host->mmc), host);
+			if (ret) {
+				printk( "%s : request_irq(host->irq_cd failed\n", __func__ );
+				return ret;
+			}
+		}
+		#else
 		set_irq_type(host->irq_cd,IRQ_TYPE_EDGE_BOTH);	
 		ret = request_irq(host->irq_cd, sdhci_irq_cd, IRQF_DISABLED, mmc_hostname(host->mmc), host);
+		#endif
 		ret = request_irq(host->irq, sdhci_irq, IRQF_SHARED,mmc_hostname(host->mmc), host);
-	if (ret)
-		return ret;
+			if (ret) {
+				printk( "%s : request_irq(host->irq failed\n", __func__ );
+				return ret;
+			}
+		if (ret)
+			return ret;
 
-	sdhci_init(host);
-	mmiowb();
+		sdhci_init(host);
+		mmiowb();
 
 		if (host->hwport !=2)
 		{
@@ -2005,11 +2040,11 @@ int sdhci_resume_host(struct sdhci_host *host)
 			}
 		}
 	} 
+
 	return 0;
 }
-#endif
-
 EXPORT_SYMBOL_GPL(sdhci_resume_host);
+#endif
 
 #endif /* CONFIG_PM */
 
@@ -2258,14 +2293,18 @@ int sdhci_add_host(struct sdhci_host *host)
 #if SUPPORT_CLK_GATING
 	setup_timer(&host->busy_check_timer, sdhci_busy_check_timer, (unsigned long)host);
 #endif
-
+	#if 1
 	if(host->hwport == TFLASH_PORT_NUM)
 	{
-	set_irq_type(host->irq_cd,IRQ_TYPE_EDGE_BOTH);	
-	ret = request_irq(host->irq_cd, sdhci_irq_cd, IRQF_DISABLED, mmc_hostname(mmc), host);
+		set_irq_type(host->irq_cd,IRQ_TYPE_EDGE_BOTH);	
+		ret = request_irq(host->irq_cd, sdhci_irq_cd, IRQF_DISABLED, mmc_hostname(mmc), host);
 		if (ret)
 			goto untasklet;
 	}
+	#else
+	set_irq_type(host->irq_cd,IRQ_TYPE_EDGE_BOTH);	
+	ret = request_irq(host->irq_cd, sdhci_irq_cd, IRQF_DISABLED, mmc_hostname(mmc), host);
+	#endif
 	ret = request_irq(host->irq, sdhci_irq, IRQF_SHARED,
 		mmc_hostname(mmc), host);
 	if (ret)
@@ -2389,16 +2428,17 @@ static int __init sdhci_drv_init(void)
 	int ext_CD_int = 0;
 	printk(KERN_INFO DRIVER_NAME
 		": Samsung S3C6410 SD/MMC driver\n");
+#ifdef TRY_USE_TFLASH_EN
 	{
 		ext_CD_int = readl(S3C64XX_GPNDAT);
-		ext_CD_int &= 0x40;	/* GPN6 */
+		ext_CD_int &= 0x40;	// GPN6
 		if(gpio_get_value(GPIO_TFLASH_EN) && ext_CD_int)
 		{
 			gpio_set_value(GPIO_TFLASH_EN, 0);
-			printk(KERN_INFO DRIVER_NAME ": TFLASH_EN OFF\n");
+			printk(KERN_INFO DRIVER_NAME ": TFLASH_EN OFF in %s()\n", __func__);
 		}
 	}
-
+#endif
 #ifdef LOCAL_CONFIG_DELAYED_CARD_DETECT
 	INIT_DELAYED_WORK(&sdhci_work.work, sdhci_cd_work_func);
 #endif

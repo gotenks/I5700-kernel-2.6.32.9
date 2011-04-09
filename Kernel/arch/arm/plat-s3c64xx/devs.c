@@ -596,6 +596,14 @@ static struct android_pmem_platform_data pmem_pdata = {
 	.buffered	= 1,	//09.12.01 hoony: surfaceflinger optimize
 };
  
+#ifdef CONFIG_USE_TOM3Q_DRIVERS
+static struct android_pmem_platform_data pmem_gpu1_pdata = {
+	.name		= "pmem_gpu1",
+	.cached		= 1,
+	.buffered	= 1,
+};
+#endif
+  
 static struct android_pmem_platform_data pmem_render_pdata = {
 	.name		= "pmem_render",
 	.no_allocator	= 1,
@@ -632,47 +640,83 @@ static struct android_pmem_platform_data pmem_jpeg_pdata = {
 	.cached		= 0,
 };
 
+#ifdef CONFIG_USE_TOM3Q_DRIVERS
+    #define BASE_PMEM_DEV_NUM 1
+#else
+    #define BASE_PMEM_DEV_NUM 0
+#endif
+
 static struct platform_device pmem_device = {
 	.name		= "android_pmem",
 	.id		= 0,
 	.dev		= { .platform_data = &pmem_pdata },
 };
  
-static struct platform_device pmem_render_device = {
+#ifdef CONFIG_USE_TOM3Q_DRIVERS
+static struct platform_device pmem_gpu1_device = {
 	.name		= "android_pmem",
 	.id		= 1,
+	.dev		= { .platform_data = &pmem_gpu1_pdata },
+};
+#endif
+  
+static struct platform_device pmem_render_device = {
+	.name		= "android_pmem",
+	.id		= BASE_PMEM_DEV_NUM + 1,
 	.dev		= { .platform_data = &pmem_render_pdata },
 };
 
 static struct platform_device pmem_stream_device = {
 	.name		= "android_pmem",
-	.id		= 2,
+	.id		= BASE_PMEM_DEV_NUM + 2,
 	.dev		= { .platform_data = &pmem_stream_pdata },
 };
 
 static struct platform_device pmem_stream2_device = {
 	.name		= "android_pmem",
-	.id		= 3,
+	.id		= BASE_PMEM_DEV_NUM + 3,
 	.dev		= { .platform_data = &pmem_stream2_pdata },
 };
 
 static struct platform_device pmem_preview_device = {
 	.name		= "android_pmem",
-	.id		= 4,
+	.id		= BASE_PMEM_DEV_NUM + 4,
 	.dev		= { .platform_data = &pmem_preview_pdata },
 };
 
 static struct platform_device pmem_picture_device = {
 	.name		= "android_pmem",
-	.id		= 5,
+	.id		= BASE_PMEM_DEV_NUM + 5,
 	.dev		= { .platform_data = &pmem_picture_pdata },
 };
 
 static struct platform_device pmem_jpeg_device = {
 	.name		= "android_pmem",
-	.id		= 6,
+	.id		= BASE_PMEM_DEV_NUM + 6,
 	.dev		= { .platform_data = &pmem_jpeg_pdata },
 };
+
+#ifdef CONFIG_ANDROID_RAM_CONSOLE
+static struct resource ram_console_resource[] = {
+	{
+		.flags  = IORESOURCE_MEM,
+	}
+	/*
+	[0] =	{
+			.start  = SEC_RAM_CONSOLE_BUF_START,
+			.end    = SEC_RAM_CONSOLE_BUF_START + SEC_RAM_CONSOLE_BUF_SIZE - 1,
+			.flags  = IORESOURCE_MEM,
+		}
+	*/
+};
+
+static struct platform_device ram_console_device = {
+        .name           = "ram_console",
+        .id             = -1,
+        .num_resources  = ARRAY_SIZE(ram_console_resource),
+        .resource       = ram_console_resource,
+};
+#endif
 
 void __init s3c6410_add_mem_devices(struct s3c6410_pmem_setting *setting)
 {
@@ -681,6 +725,14 @@ void __init s3c6410_add_mem_devices(struct s3c6410_pmem_setting *setting)
 		pmem_pdata.size = setting->pmem_size;
 		platform_device_register(&pmem_device);
 	}
+
+#ifdef CONFIG_USE_TOM3Q_DRIVERS
+	if (setting->pmem_gpu1_size) {
+		pmem_gpu1_pdata.start = setting->pmem_gpu1_start;
+		pmem_gpu1_pdata.size = setting->pmem_gpu1_size;
+		platform_device_register(&pmem_gpu1_device);
+	}
+#endif
 
 	if (setting->pmem_render_size) {
 		pmem_render_pdata.start = setting->pmem_render_start;
@@ -717,4 +769,10 @@ void __init s3c6410_add_mem_devices(struct s3c6410_pmem_setting *setting)
 		pmem_jpeg_pdata.size = setting->pmem_jpeg_size;
 		platform_device_register(&pmem_jpeg_device);
 	}
+
+	#ifdef CONFIG_ANDROID_RAM_CONSOLE
+		ram_console_resource[0].start = SEC_RAM_CONSOLE_BUF_START;
+		ram_console_resource[0].end   = SEC_RAM_CONSOLE_BUF_START + SEC_RAM_CONSOLE_BUF_SIZE - 1;
+		platform_device_register(&ram_console_device);
+	#endif
 }

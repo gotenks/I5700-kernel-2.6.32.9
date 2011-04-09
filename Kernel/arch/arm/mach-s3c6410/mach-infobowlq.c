@@ -170,43 +170,44 @@ struct platform_device sec_device_ts = {
 #endif
 
 struct platform_device sec_device_max9877 = {
-    .name   = "max9877",
-	.id     = -1,
+	.name	= "max9877",
+	.id	= -1,
 };
 
 struct platform_device sec_device_battery = {
-	.name   = "spica-battery",
+	.name	= "spica-battery",
 	.id		= -1,
 };
 
 struct platform_device sec_device_rfkill = {
-	.name = "bt_rfkill",
-	.id = -1,
+	.name	= "bt_rfkill",
+	.id	= -1,
 };
 
 struct platform_device sec_device_btsleep = {
-	.name = "bt_sleep",
-	.id = -1,
+	.name	= "bt_sleep",
+	.id	= -1,
 };
 
 struct platform_device sec_device_eled = {
-	.name   = "bd2802gue2-eled",
-	.id		= -1,
-
+	.name	= "bd2802gue2-eled",
+	.id	= -1,
 };
 
+#if 0
 struct platform_device sec_device_optjoy = {
-	.name   = "optjoy_device",
-	.id		= -1,
+	.name	= "optjoy_device",
+	.id	= -1,
 };
+#endif
 
 struct platform_device sec_device_opt = {
-	.name   = "gp2a-opt",
-	.id		= -1,
+	.name	= "gp2a-opt",
+	.id	= -1,
 };
 
 static struct sec_headset_port sec_headset_port[] = {
-        {
+	{
 		{ // HEADSET detect info
 			.eint		= IRQ_EINT(10), 
 			.gpio		= GPIO_DET_35,   
@@ -217,45 +218,45 @@ static struct sec_headset_port sec_headset_port[] = {
 			.gpio		= GPIO_EAR_SEND_END, 
 			.gpio_af	= GPIO_EAR_SEND_END_AF, 
 			.low_active	= 1
-		}/*,{ // SEND/END info
+		},{ // SEND/END info
 			.eint		= IRQ_EINT(21), 
 			.gpio		= GPIO_MONOHEAD_DET, 
 			.gpio_af	= GPIO_MONOHEAD_DET_AF, 
 			.low_active	= 0
-	     	}*/
+	     	}
         }
 };
  
 static struct sec_headset_platform_data sec_headset_data = {
-        .port           = sec_headset_port,
-        .nheadsets      = ARRAY_SIZE(sec_headset_port),
+	.port           = sec_headset_port,
+	.nheadsets      = ARRAY_SIZE(sec_headset_port),
 };
 
 static struct platform_device sec_device_headset = {
-        .name           = "sec_headset",
-        .id             = -1,
-        .dev            = {
-                .platform_data  = &sec_headset_data,
+	.name           = "sec_headset",
+	.id             = -1,
+	.dev            = {
+	.platform_data  = &sec_headset_data,
         },
 };
 
 static struct s3c6410_pmem_setting pmem_setting = {
-        .pmem_start = RESERVED_PMEM_START,
-        .pmem_size = RESERVED_PMEM,
-        .pmem_gpu1_start = GPU1_RESERVED_PMEM_START,
-        .pmem_gpu1_size = RESERVED_PMEM_GPU1,
-        .pmem_render_start = RENDER_RESERVED_PMEM_START,
-        .pmem_render_size = RESERVED_PMEM_RENDER,
-        .pmem_stream_start = STREAM_RESERVED_PMEM_START,
-        .pmem_stream_size = RESERVED_PMEM_STREAM,
+        .pmem_start         = RESERVED_PMEM_START,
+        .pmem_size          = RESERVED_PMEM,
+#ifdef CONFIG_USE_TOM3Q_DRIVERS
+        .pmem_gpu1_start    = GPU1_RESERVED_PMEM_START,
+        .pmem_gpu1_size     = RESERVED_PMEM_GPU1,
+#endif
+        .pmem_render_start  = RENDER_RESERVED_PMEM_START,
+        .pmem_render_size   = RESERVED_PMEM_RENDER,
+        .pmem_stream_start  = STREAM_RESERVED_PMEM_START,
+        .pmem_stream_size   = RESERVED_PMEM_STREAM,
         .pmem_preview_start = PREVIEW_RESERVED_PMEM_START,
-        .pmem_preview_size = RESERVED_PMEM_PREVIEW,
+        .pmem_preview_size  = RESERVED_PMEM_PREVIEW,
         .pmem_picture_start = PICTURE_RESERVED_PMEM_START,
-        .pmem_picture_size = RESERVED_PMEM_PICTURE,
-        .pmem_jpeg_start = JPEG_RESERVED_PMEM_START,
-        .pmem_jpeg_size = RESERVED_PMEM_JPEG,
-        .pmem_skia_start = SKIA_RESERVED_PMEM_START,
-        .pmem_skia_size = RESERVED_PMEM_SKIA,
+        .pmem_picture_size  = RESERVED_PMEM_PICTURE,
+        .pmem_jpeg_start    = JPEG_RESERVED_PMEM_START,
+        .pmem_jpeg_size     = RESERVED_PMEM_JPEG,
 };
 
 #ifdef CONFIG_S3C64XX_ADCTS
@@ -315,10 +316,11 @@ static struct platform_device *infobowlq_devices[] __initdata = {
 #if defined(CONFIG_I2C_GPIO)
 	&s3c_device_i2c2,
 	&s3c_device_i2c3,
-#if defined(__FUEL_GAUGES_IC_MAX17043__) // definition is placed in : mach/infobowlq_gpio.h
+// definition is placed in : mach/infobowlq_gpio.h
+#if defined(__FUEL_GAUGES_IC_MAX17043__) 
 	&s3c_device_i2c4,
 #endif
-        &s3c_device_i2c5,
+        //&s3c_device_i2c5,
         &s3c_device_i2c6,
 #endif
 	&sec_device_ts,
@@ -354,14 +356,13 @@ static struct platform_device *infobowlq_devices[] __initdata = {
 	//&sec_device_opt,
 };
 
+// local definitions of I2C addresses. Bad solution
 #if defined(CONFIG_TOUCHSCREEN_QT5480)
     #define QT5480_I2C_ADDR 			0x60
     #define IRQ_TOUCH_INT 			IRQ_EINT(20)
 #else
     #define MELFAS_I2C_ADDR 			0x60
     #define IRQ_TOUCH_INT 			IRQ_EINT(20)
-    //#define MELFAS_I2C_ADDR 			0x40
-    //#define IRQ_TOUCH_INT 			IRQ_EINT(8)
 #endif
 
 #define E_COMPASS_ADDRESS			0x1c
@@ -385,11 +386,9 @@ static struct i2c_board_info i2c_devs0[] __initdata = {
 		.irq = IRQ_FSA9480_INT,
 	},
 #endif
-#if 1
 	{
 		I2C_BOARD_INFO("bma020", ACC_SENSOR_ADDRESS),
 	},
-#endif
 };
 
 static struct i2c_board_info i2c_devs1[] __initdata = {
@@ -446,8 +445,7 @@ static void __init infobowlq_fixup(struct machine_desc *desc,
 	mi->bank[0].node = 0;
 }
 
-static void __init s3c64xx_allocate_memory_regions(void)
-{
+static void __init s3c64xx_allocate_memory_regions(void) {
 	void *addr;
 	unsigned long size;
 
@@ -458,8 +456,7 @@ static void __init s3c64xx_allocate_memory_regions(void)
 }
 
 //bgkim dk09 added for wifi static memory allocation
-static void __init s3c64xx_allocate_wifi_static_memory(void) 
-{
+static void __init s3c64xx_allocate_wifi_static_memory(void) {
 	void *addr;
 	unsigned long size;
 
@@ -469,8 +466,7 @@ static void __init s3c64xx_allocate_wifi_static_memory(void)
 
 }
 
-static void __init infobowlq_map_io(void)
-{
+static void __init infobowlq_map_io(void) {
 	s3c64xx_init_io(infobowlq_iodesc, ARRAY_SIZE(infobowlq_iodesc));
 	s3c64xx_gpiolib_init();
 	s3c_init_clocks(12000000);
@@ -479,9 +475,8 @@ static void __init infobowlq_map_io(void)
 	s3c64xx_allocate_wifi_static_memory(); //bgkim dk09 added for wifi static memory allocation
 }
 
-static void infobowlq_set_qos(void) 
-{     
-	u32 reg;     							 /* AXI sfr */     
+static void infobowlq_set_qos(void) {     
+	u32 reg;     							/* AXI sfr */     
 
 	reg = (u32) ioremap((unsigned long) S3C6410_PA_AXI_SYS, SZ_4K); /* QoS override: FIMD min. latency */
 	writel(0x2, S3C_VA_SYS + 0x128);  	    			/* AXI QoS */
@@ -516,15 +511,18 @@ extern int get_usb_cable_state(void);
 
 extern void arch_reset(char mode);
 
-static void infobowlq_pm_power_off(void)
-{
-	int	mode = REBOOT_MODE_NONE;
+#ifdef CONFIG_KERNEL_DEBUG_SEC
+extern void kernel_sec_clear_upload_magic_number();
+#endif 
+
+static void infobowlq_pm_power_off(void) {
+	int  mode = REBOOT_MODE_NONE;
 	char reset_mode = 'r';
-	int cnt = 0;
+	int  cnt = 0;
 
 #ifdef CONFIG_KERNEL_DEBUG_SEC
-    extern void kernel_sec_clear_upload_magic_number();
-	kernel_sec_clear_upload_magic_number();  // Clear the magic number because it's normal reboot.
+	// Clear the magic number because it's normal reboot.
+	kernel_sec_clear_upload_magic_number();  
 #endif 
 
 	if (!gpio_get_value(GPIO_TA_CONNECTED_N)) {	/* Reboot Charging */
@@ -550,19 +548,19 @@ static void infobowlq_pm_power_off(void)
 			if (gpio_is_valid(GPIO_POWER_N)) {
 				if (gpio_request(GPIO_POWER_N, S3C_GPIO_LAVEL(GPIO_POWER_N))) 
 					printk(KERN_ERR "Failed to request GPIO_POWER_N!\n");
-			gpio_direction_input(GPIO_POWER_N);
+				gpio_direction_input(GPIO_POWER_N);
 			}
 			/* PHONE_ACTIVE -> Input */
 			if (gpio_is_valid(GPIO_PHONE_ACTIVE)) {
 				if (gpio_request(GPIO_PHONE_ACTIVE, S3C_GPIO_LAVEL(GPIO_PHONE_ACTIVE))) 
 					printk(KERN_ERR "Failed to request GPIO_PHONE_ACTIVE!\n");
-			gpio_direction_input(GPIO_PHONE_ACTIVE);
+				gpio_direction_input(GPIO_PHONE_ACTIVE);
 			}
 			/* Check Power Off Condition */
 			if (!gpio_get_value(GPIO_POWER_N) || gpio_get_value(GPIO_PHONE_ACTIVE)) {
 				/* Wait Power Button Release */
 				printk(KERN_EMERG "%s: waiting for GPIO_POWER_N high.\n", __func__);
-				while (!gpio_get_value(GPIO_POWER_N)); 
+				while (!gpio_get_value(GPIO_POWER_N)); // !!! potential hang ??? !!!
 
 				/* Wait Phone Power Off */
 				printk(KERN_EMERG "%s: waiting for GPIO_PHONE_ACTIVE low.\n", __func__);
@@ -582,7 +580,7 @@ static void infobowlq_pm_power_off(void)
 			if (gpio_is_valid(GPIO_PDA_PS_HOLD)) {
 				if (gpio_request(GPIO_PDA_PS_HOLD, S3C_GPIO_LAVEL(GPIO_PDA_PS_HOLD))) 
 					printk(KERN_ERR "Failed to request GPIO_PDA_PS_HOLD!\n");
-			gpio_direction_output(GPIO_PDA_PS_HOLD, GPIO_LEVEL_HIGH);
+				gpio_direction_output(GPIO_PDA_PS_HOLD, GPIO_LEVEL_HIGH);
 			}
 			s3c_gpio_setpull(GPIO_PDA_PS_HOLD, S3C_GPIO_PULL_NONE);
 			gpio_set_value(GPIO_PDA_PS_HOLD, GPIO_LEVEL_LOW);
@@ -596,8 +594,7 @@ static void infobowlq_pm_power_off(void)
 
 static int uart_current_owner = 0;
 
-static ssize_t uart_switch_show(struct device *dev, struct device_attribute *attr, char *buf)
-{	
+static ssize_t uart_switch_show(struct device *dev, struct device_attribute *attr, char *buf) {
 	int switch_sel;
 
 	if (sec_get_param_value) {
@@ -608,12 +605,16 @@ static ssize_t uart_switch_show(struct device *dev, struct device_attribute *att
 	}
 
 	if ( uart_current_owner )		
-		return sprintf(buf, "%s[UART Switch] Current UART owner = PDA \n", buf);	
+		return sprintf(buf, "%s[UART Switch] Current UART owner = PDA \n", buf);
 	else			
 		return sprintf(buf, "%s[UART Switch] Current UART owner = MODEM \n", buf);
 }
 
-static ssize_t uart_switch_store(		struct device *dev, struct device_attribute *attr,		const char *buf, size_t size)
+static ssize_t uart_switch_store(
+		struct device *dev, 
+		struct device_attribute *attr,
+		const char *buf, 
+		size_t size)
 {	
 	int switch_sel;
 
@@ -642,8 +643,7 @@ static ssize_t uart_switch_store(		struct device *dev, struct device_attribute *
 
 static DEVICE_ATTR(uart_sel, S_IRUGO |S_IWUGO | S_IRUSR | S_IWUSR, uart_switch_show, uart_switch_store);
 
-static int infobowlq_notifier_call(struct notifier_block *this, unsigned long code, void *_cmd)
-{
+static int infobowlq_notifier_call(struct notifier_block *this, unsigned long code, void *_cmd) {
 	int	mode = REBOOT_MODE_NONE;
 
 	if ((code == SYS_RESTART) && _cmd) {
@@ -662,8 +662,8 @@ static int infobowlq_notifier_call(struct notifier_block *this, unsigned long co
 		else if (!strcmp((char *)_cmd, "download")) 
 			mode = REBOOT_MODE_DOWNLOAD;
 #ifdef CONFIG_KERNEL_DEBUG_SEC 
-		//etinum.factory.reboot disable uart msg in bootloader for
-		// factory reset 2nd ack
+		// etinum.factory.reboot disable uart msg
+		// in bootloader for factory reset 2nd ack
 		else if (!strcmp((char *)_cmd, "factory_reboot")) { 
 			mode = REBOOT_MODE_NONE;
 			kernel_sec_set_upload_cause(BLK_UART_MSG_FOR_FACTRST_2ND_ACK);
@@ -681,8 +681,7 @@ static struct notifier_block infobowlq_reboot_notifier = {
 	.notifier_call = infobowlq_notifier_call,
 };
 
-static void infobowlq_switch_init(void)
-{
+static void infobowlq_switch_init(void) {
 	sec_class = class_create(THIS_MODULE, "sec");
 	if (IS_ERR(sec_class))
 		pr_err("Failed to create class(sec)!\n");
@@ -702,8 +701,7 @@ static void infobowlq_switch_init(void)
 		pr_err("Failed to create device file(%s)!\n", dev_attr_uart_sel.attr.name);
 };
 
-static void __init infobowlq_machine_init(void)
-{
+static void __init infobowlq_machine_init(void) {
 	printk("INFOBOWLQ Machine INIT : Board REV 0x%x\n", CONFIG_INFOBOWLQ_REV);
 	
 	infobowlq_init_gpio();
@@ -772,13 +770,13 @@ static void __init infobowlq_machine_init(void)
 MACHINE_START(INFOBOWLQ, "SPICA") //mrahn80 DJ26 : apply new codec libs.
 	/* Maintainer: Ben Dooks <ben@fluff.org> */
 	.phys_io		= S3C_PA_UART & 0xfff00000,
-	.io_pg_offst	= (((u32)S3C_VA_UART) >> 18) & 0xfffc,
-	.boot_params	= S3C64XX_PA_SDRAM + 0x100,
+	.io_pg_offst		= (((u32)S3C_VA_UART) >> 18) & 0xfffc,
+	.boot_params		= S3C64XX_PA_SDRAM + 0x100,
 
 	.init_irq		= s3c6410_init_irq,
 	.fixup			= infobowlq_fixup,
 	.map_io			= infobowlq_map_io,
-	.init_machine	= infobowlq_machine_init,
+	.init_machine		= infobowlq_machine_init,
 #ifndef CONFIG_HIGH_RES_TIMERS
 	.timer			= &s3c64xx_timer,
 #else
@@ -788,43 +786,34 @@ MACHINE_END
 
 #if defined(CONFIG_RTC_DRV_S3C)
 /* RTC common Function for samsung APs*/
-unsigned int s3c_rtc_set_bit_byte(void __iomem *base, uint offset, uint val)
-{
+unsigned int s3c_rtc_set_bit_byte(void __iomem *base, uint offset, uint val) {
 	writeb(val, base + offset);
-
 	return 0;
 }
 
-unsigned int s3c_rtc_read_alarm_status(void __iomem *base)
-{
+unsigned int s3c_rtc_read_alarm_status(void __iomem *base) {
 	return 1;
 }
 
-void s3c_rtc_set_pie(void __iomem *base, uint to)
-{
+void s3c_rtc_set_pie(void __iomem *base, uint to) {
 	unsigned int tmp;
-
 	tmp = readw(base + S3C_RTCCON) & ~S3C_RTCCON_TICEN;
-
         if (to)
                 tmp |= S3C_RTCCON_TICEN;
-
         writew(tmp, base + S3C_RTCCON);
 }
 
-void s3c_rtc_set_freq_regs(void __iomem *base, uint freq, uint s3c_freq)
-{
+void s3c_rtc_set_freq_regs(void __iomem *base, uint freq, uint s3c_freq) {
 	unsigned int tmp;
 
-        tmp = readw(base + S3C_RTCCON) & (S3C_RTCCON_TICEN | S3C_RTCCON_RTCEN );
-        writew(tmp, base + S3C_RTCCON);
-        s3c_freq = freq;
-        tmp = (32768 / freq)-1;
-        writel(tmp, base + S3C_TICNT);
+	tmp = readw(base + S3C_RTCCON) & (S3C_RTCCON_TICEN | S3C_RTCCON_RTCEN );
+	writew(tmp, base + S3C_RTCCON);
+	s3c_freq = freq;
+	tmp = (32768 / freq)-1;
+	writel(tmp, base + S3C_TICNT);
 }
 
-void s3c_rtc_enable_set(struct platform_device *pdev,void __iomem *base, int en)
-{
+void s3c_rtc_enable_set(struct platform_device *pdev,void __iomem *base, int en) {
 	unsigned int tmp;
 
 	if (!en) {
@@ -832,21 +821,21 @@ void s3c_rtc_enable_set(struct platform_device *pdev,void __iomem *base, int en)
 		writew(tmp & ~ (S3C_RTCCON_RTCEN | S3C_RTCCON_TICEN), base + S3C_RTCCON);
 	} else {
 		/* re-enable the device, and check it is ok */
-		if ((readw(base+S3C_RTCCON) & S3C_RTCCON_RTCEN) == 0){
+		if ((readw(base+S3C_RTCCON) & S3C_RTCCON_RTCEN) == 0) {
 			dev_info(&pdev->dev, "rtc disabled, re-enabling\n");
                     
 			tmp = readw(base + S3C_RTCCON);
 			writew(tmp|S3C_RTCCON_RTCEN, base+S3C_RTCCON);
 		}
 
-		if ((readw(base + S3C_RTCCON) & S3C_RTCCON_CNTSEL)){
+		if ((readw(base + S3C_RTCCON) & S3C_RTCCON_CNTSEL)) {
 			dev_info(&pdev->dev, "removing RTCCON_CNTSEL\n");
 
 			tmp = readw(base + S3C_RTCCON);
 			writew(tmp& ~S3C_RTCCON_CNTSEL, base+S3C_RTCCON);
 		}
 
-		if ((readw(base + S3C_RTCCON) & S3C_RTCCON_CLKRST)){
+		if ((readw(base + S3C_RTCCON) & S3C_RTCCON_CLKRST)) {
 			dev_info(&pdev->dev, "removing RTCCON_CLKRST\n");
 
 			tmp = readw(base + S3C_RTCCON);
@@ -857,8 +846,7 @@ void s3c_rtc_enable_set(struct platform_device *pdev,void __iomem *base, int en)
 #endif
 
 #if defined(CONFIG_KEYPAD_S3C) || defined (CONFIG_KEYPAD_S3C_MODULE)
-void s3c_setup_keypad_cfg_gpio(int rows, int columns)
-{
+void s3c_setup_keypad_cfg_gpio(int rows, int columns) {
 	unsigned int gpio;
 	unsigned int end;
 
@@ -882,8 +870,7 @@ void s3c_setup_keypad_cfg_gpio(int rows, int columns)
 EXPORT_SYMBOL(s3c_setup_keypad_cfg_gpio);
 #endif
 
-void s3c_setup_uart_cfg_gpio(unsigned char port)
-{
+void s3c_setup_uart_cfg_gpio(unsigned char port) {
 	if (port == 0) {
 		s3c_gpio_cfgpin(GPIO_FLM_RXD, S3C_GPIO_SFN(GPIO_FLM_RXD_AF));
 		s3c_gpio_setpull(GPIO_FLM_RXD, S3C_GPIO_PULL_NONE);
@@ -971,28 +958,28 @@ static int infobowlq_gpio_table[][6] = {
 	{ GPIO_PM_SET1, GPIO_PM_SET1_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },	
 	{ GPIO_PM_SET2, GPIO_PM_SET2_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },	
 	{ GPIO_PM_SET3, GPIO_PM_SET3_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },	
-	{ GPIO_WLAN_CMD, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },	
-	{ GPIO_WLAN_CLK, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_WLAN_WAKE, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
-	{ GPIO_BT_WAKE, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
+	{ GPIO_WLAN_CMD,  0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },	
+	{ GPIO_WLAN_CLK,  0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_WLAN_WAKE, 1, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
+	{ GPIO_BT_WAKE,   1, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
 	/* GPD */
-	{ GPIO_I2S_CLK, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_BT_WLAN_REG_ON, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
-	{ GPIO_I2S_LRCLK, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_I2S_DI, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_I2S_DO, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_I2S_CLK,        0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_BT_WLAN_REG_ON, 1, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
+	{ GPIO_I2S_LRCLK,      0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_I2S_DI,         0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_I2S_DO,         0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	/* GPE */
-	{ GPIO_BT_RST_N, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
-	{ GPIO_BOOT, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
-	{ GPIO_WLAN_RST_N, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
+	{ GPIO_BT_RST_N,    1, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
+	{ GPIO_BOOT,        0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
+	{ GPIO_WLAN_RST_N,  1, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
 	{ GPIO_PWR_I2C_SCL, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
 	{ GPIO_PWR_I2C_SDA, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
 	/* GPF */
-	{ GPIO_CAM_MCLK, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_CAM_HSYNC, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_CAM_PCLK, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_MCAM_RST_N, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
-	{ GPIO_CAM_VSYNC, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_CAM_MCLK,   0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_CAM_HSYNC,  0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_CAM_PCLK,   0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_MCAM_RST_N, 1, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
+	{ GPIO_CAM_VSYNC,  0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	{ GPIO_CAM_D_0, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	{ GPIO_CAM_D_1, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	{ GPIO_CAM_D_2, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
@@ -1012,9 +999,9 @@ static int infobowlq_gpio_table[][6] = {
 	/* GPH */
 	{ GPIO_TOUCH_I2C_SCL, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },	
 	{ GPIO_TOUCH_I2C_SDA, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
-	{ GPIO_FM_I2C_SCL, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
-	{ GPIO_FM_I2C_SDA, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
-	{ GPIO_VIB_EN, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
+	{ GPIO_FM_I2C_SCL,    0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
+	{ GPIO_FM_I2C_SDA,    0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
+	{ GPIO_VIB_EN,        1, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
 	{ GPIO_WLAN_D_0, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
 	{ GPIO_WLAN_D_1, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
 	{ GPIO_WLAN_D_2, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
@@ -1041,17 +1028,17 @@ static int infobowlq_gpio_table[][6] = {
 	{ GPIO_LCD_R_5, GPIO_LCD_R_5_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	{ GPIO_LCD_HSYNC, GPIO_LCD_HSYNC_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	{ GPIO_LCD_VSYNC, GPIO_LCD_VSYNC_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
-	{ GPIO_LCD_DE, GPIO_LCD_DE_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
+	{ GPIO_LCD_DE,  GPIO_LCD_DE_AF,  GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	{ GPIO_LCD_CLK, GPIO_LCD_CLK_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_DOWN },
 	/** ALIVE PART **/
 	/* GPK */
-	{ GPIO_TA_EN, GPIO_TA_EN_AF, GPIO_LEVEL_HIGH, S3C_GPIO_PULL_NONE, 0, 0 }, 
-	{ GPIO_AUDIO_EN, GPIO_AUDIO_EN_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_PHONE_ON, GPIO_PHONE_ON_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_MICBIAS_EN, GPIO_MICBIAS_EN_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_TA_EN,      GPIO_TA_EN_AF,      GPIO_LEVEL_HIGH, S3C_GPIO_PULL_NONE, 0, 0 }, 
+	{ GPIO_AUDIO_EN,   GPIO_AUDIO_EN_AF,   GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_PHONE_ON,   GPIO_PHONE_ON_AF,   GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_MICBIAS_EN, GPIO_MICBIAS_EN_AF, GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, 0, 0 },
 	/* { GPIO_UART_SEL, GPIO_UART_SEL_AF, GPIO_LEVEL_HIGH, S3C_GPIO_PULL_NONE, 0, 0 }, */
-	{ GPIO_TOUCH_RST, GPIO_TOUCH_RST_AF, GPIO_LEVEL_HIGH, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_CAM_EN, GPIO_CAM_EN_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_TOUCH_RST,   GPIO_TOUCH_RST_AF,   GPIO_LEVEL_HIGH, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_CAM_EN,      GPIO_CAM_EN_AF,      GPIO_LEVEL_LOW,  S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_PHONE_RST_N, GPIO_PHONE_RST_N_AF, GPIO_LEVEL_HIGH, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_KEYSCAN_0, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_KEYSCAN_1, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
@@ -1066,48 +1053,48 @@ static int infobowlq_gpio_table[][6] = {
 	{ GPIO_KEYSENSE_1, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_KEYSENSE_2, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_KEYSENSE_3, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_USIM_BOOT, GPIO_USIM_BOOT_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_USIM_BOOT,     GPIO_USIM_BOOT_AF,     GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_CAM_3M_STBY_N, GPIO_CAM_3M_STBY_N_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 #if (CONFIG_SPICA_REV >= CONFIG_SPICA_TEST_REV02)
 	{ GPIO_HOLD_KEY_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
 #else
-	{ S3C64XX_GPL(9), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ S3C64XX_GPL(9),  1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 #endif
-	{ S3C64XX_GPL(10), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ S3C64XX_GPL(10),     1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_TA_CONNECTED_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_TOUCH_INT_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_CP_BOOT_SEL, GPIO_CP_BOOT_SEL_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_BT_HOST_WAKE, GPIO_BT_HOST_WAKE_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, 0, 0 },
+	{ GPIO_TOUCH_INT_N,    0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_CP_BOOT_SEL,    GPIO_CP_BOOT_SEL_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_BT_HOST_WAKE,   GPIO_BT_HOST_WAKE_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, 0, 0 },
 	/* GPM */
 	{ S3C64XX_GPM(0), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ S3C64XX_GPM(1), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_TA_CHG_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_TA_CHG_N,  0, GPIO_LEVEL_NONE,  S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_PDA_ACTIVE, GPIO_PDA_ACTIVE_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 }, 
 	{ S3C64XX_GPM(4), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ S3C64XX_GPM(5), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	/* GPN */
-	{ GPIO_ONEDRAM_INT_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_ONEDRAM_INT_N,  0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_WLAN_HOST_WAKE, GPIO_WLAN_HOST_WAKE_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_DOWN, 0, 0 },
-	{ GPIO_MSENSE_INT, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_ACC_INT, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_SIM_DETECT_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_POWER_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_TF_DETECT, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_PHONE_ACTIVE, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_PMIC_INT_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_JACK_INT_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_DET_35, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_EAR_SEND_END, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_RESOUT_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_BOOT_EINT13, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_BOOT_EINT14, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_BOOT_EINT15, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_MSENSE_INT,     0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_ACC_INT,        0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_SIM_DETECT_N,   0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_POWER_N,        0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_TF_DETECT,      0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_PHONE_ACTIVE,   0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_PMIC_INT_N,     0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_JACK_INT_N,     0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_DET_35,         0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_EAR_SEND_END,   0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_RESOUT_N,       0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_BOOT_EINT13,    0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_BOOT_EINT14,    0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_BOOT_EINT15,    0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
 	/** MEMORY PART **/
 	/* GPO */
 	{ S3C64XX_GPO(4), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
 	{ S3C64XX_GPO(5), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
 	/* GPP */
-	{ S3C64XX_GPP(8), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
+	{ S3C64XX_GPP(8),  1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
 	{ S3C64XX_GPP(10), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
 	{ S3C64XX_GPP(14), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
 	/* GPQ */
@@ -1118,8 +1105,7 @@ static int infobowlq_gpio_table[][6] = {
 	{ S3C64XX_GPQ(6), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
 };
 
-void s3c_config_gpio_table(int array_size, int (*gpio_table)[6])
-{
+void s3c_config_gpio_table(int array_size, int (*gpio_table)[6]) {
 	u32 i, gpio;
 
 	pr_debug("%s: ++\n", __func__);
@@ -1154,8 +1140,7 @@ void s3c_config_gpio_table(int array_size, int (*gpio_table)[6])
 }
 EXPORT_SYMBOL(s3c_config_gpio_table);
 
-void infobowlq_init_gpio(void)
-{
+void infobowlq_init_gpio(void) {
 	s3c_config_gpio_table(ARRAY_SIZE(infobowlq_gpio_table),
 			infobowlq_gpio_table);
 }
@@ -1183,88 +1168,65 @@ static int infobowlq_sleep_gpio_table[][6] = {
 	{ GPIO_KEYSENSE_1, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_KEYSENSE_2, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_KEYSENSE_3, 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ S3C64XX_GPL(4), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ S3C64XX_GPL(5), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ S3C64XX_GPL(6), 1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_USIM_BOOT, GPIO_USIM_BOOT_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ S3C64XX_GPL(4),  1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ S3C64XX_GPL(5),  1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ S3C64XX_GPL(6),  1, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_USIM_BOOT,     GPIO_USIM_BOOT_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
 	{ GPIO_CAM_3M_STBY_N, GPIO_CAM_3M_STBY_N_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 },
-	{ GPIO_TOUCH_INT_N, 0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
+	{ GPIO_TOUCH_INT_N,   0, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, 0, 0 },
 	/* GPM */
 	{ GPIO_PDA_ACTIVE, GPIO_PDA_ACTIVE_AF, GPIO_LEVEL_LOW, S3C_GPIO_PULL_NONE, 0, 0 }, 
 	/** MEMORY PART **/
 	/* GPO */
-	{ GPIO_LCD_RST_N, GPIO_LCD_RST_N_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
-	{ GPIO_LCD_CS_N, GPIO_LCD_CS_N_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
-	{ GPIO_LCD_SDI, GPIO_LCD_SDI_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
-	{ GPIO_LCD_ID, GPIO_LCD_ID_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
-	{ GPIO_LCD_SCLK, GPIO_LCD_SCLK_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0, S3C_GPIO_PULL_NONE },
+	{ GPIO_LCD_RST_N, GPIO_LCD_RST_N_AF, GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
+	{ GPIO_LCD_CS_N,  GPIO_LCD_CS_N_AF,  GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
+	{ GPIO_LCD_SDI,   GPIO_LCD_SDI_AF,   GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
+	{ GPIO_LCD_ID,    GPIO_LCD_ID_AF,    GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_INPUT, S3C_GPIO_PULL_NONE },
+	{ GPIO_LCD_SCLK,  GPIO_LCD_SCLK_AF,  GPIO_LEVEL_NONE, S3C_GPIO_PULL_NONE, S3C_GPIO_SLP_OUT0,  S3C_GPIO_PULL_NONE },
 };
 
-static void check_pmic(void)
-{
-#if 0
+static void check_pmic(void) {
 	unsigned char reg_buff = 0;
 
 #if defined(CONFIG_MACH_INFOBOWLQ) || defined(CONFIG_MACH_MAX)
 		if (Get_MAX8698_PM_REG(EN1, &reg_buff)) {
-			pr_info("%s: BUCK1 (%d)\n", __func__, reg_buff);
+			pr_info("  %s: BUCK1 (%d)\n", __func__, reg_buff);
 			if (reg_buff)
 				Set_MAX8698_PM_REG(EN1, 0);
 		}
 		if (Get_MAX8698_PM_REG(EN2, &reg_buff)) {
-			pr_info("%s: BUCK2 (%d)\n", __func__, reg_buff);
+			pr_info("  %s: BUCK2 (%d)\n", __func__, reg_buff);
 			if (reg_buff)
 				Set_MAX8698_PM_REG(EN2, 0);
 		}
 #endif
 
 	if (Get_MAX8698_PM_REG(ELDO3, &reg_buff)) {
-		pr_info("%s: OTGI 1.2V (%d)\n", __func__, reg_buff);
+		pr_info("  %s: OTGI 1.2V (%d)\n", __func__, reg_buff);
 	}
 	if (Get_MAX8698_PM_REG(ELDO4, &reg_buff)) {
-		pr_info("%s: BT_WL 2.6V (%d)\n", __func__, reg_buff);
+		pr_info("  %s: BT WL 3.3V (%d)\n", __func__, reg_buff);
 	}
 	if (Get_MAX8698_PM_REG(ELDO5, &reg_buff)) {
-		pr_info("%s: MMC 3.0V (%d)\n", __func__, reg_buff);
-	}
-	if (Get_MAX8698_PM_REG(ELDO6, &reg_buff)) {
-		pr_info("%s: VLCD 1.8V (%d)\n", __func__, reg_buff);
-	}
-	if (Get_MAX8698_PM_REG(ELDO7, &reg_buff)) {
-		pr_info("%s: VLCD 2.8V (%d)\n", __func__, reg_buff);
-	}
-	if (Get_MAX8698_PM_REG(ELDO8, &reg_buff)) {
-		pr_info("%s: OTG 3.3V (%d)\n", __func__, reg_buff);
-	}
-#else
-	unsigned char reg_buff = 0;
-	if (Get_MAX8698_PM_REG(ELDO3, &reg_buff)) {
-		pr_info("%s: OTGI 1.2V (%d)\n", __func__, reg_buff);
-	}
-	if (Get_MAX8698_PM_REG(ELDO4, &reg_buff)) {
-		pr_info("%s: VLED 3.3V (%d)\n", __func__, reg_buff);
-	}
-	if (Get_MAX8698_PM_REG(ELDO5, &reg_buff)) {
-		pr_info("%s: VTF 3.0V (%d)\n", __func__, reg_buff);
+		pr_info("  %s: MMC 3.0V (%d)\n", __func__, reg_buff);
 		if (reg_buff)
 			Set_MAX8698_PM_REG(ELDO5, 0);
 	}
 	if (Get_MAX8698_PM_REG(ELDO6, &reg_buff)) {
-		pr_info("%s: VLCD 1.8V (%d)\n", __func__, reg_buff);
+		pr_info("  %s: VLCD 1.8V (%d)\n", __func__, reg_buff);
 	}
 	if (Get_MAX8698_PM_REG(ELDO7, &reg_buff)) {
-		pr_info("%s: VLCD 3.0V (%d)\n", __func__, reg_buff);
+		pr_info("  %s: VLCD 3.0V (%d)\n", __func__, reg_buff);
 	}
 	if (Get_MAX8698_PM_REG(ELDO8, &reg_buff)) {
-		pr_info("%s: OTG 3.3V (%d)\n", __func__, reg_buff);
+		pr_info("  %s: OTG 3.3V (%d)\n", __func__, reg_buff);
 	}
-#endif
 }
 
-void s3c_config_sleep_gpio(void)
-{	
+void s3c_config_sleep_gpio(void) {
 	int spcon_val;
 
+	pr_info("%s: calling check_pmic()", __func__);
 	check_pmic();
 	s3c_config_gpio_table(ARRAY_SIZE(infobowlq_sleep_gpio_table),
 			infobowlq_sleep_gpio_table);
@@ -1282,8 +1244,13 @@ void s3c_config_sleep_gpio(void)
 }
 EXPORT_SYMBOL(s3c_config_sleep_gpio);
 
-void s3c_config_wakeup_gpio(void)
-{
+void s3c_config_wakeup_gpio(void) {
+	unsigned char reg_buff = 0;
+	if (Get_MAX8698_PM_REG(ELDO5, &reg_buff)) {
+		pr_info("%s: MMC 3.0V (%d)\n", __func__, reg_buff);
+		if (!reg_buff)
+			Set_MAX8698_PM_REG(ELDO5, 1);
+	}
 }
 EXPORT_SYMBOL(s3c_config_wakeup_gpio);
 
@@ -1295,8 +1262,10 @@ extern short int get_headset_status();
 short int get_headset_status(){return 1;}
 #endif
 
-void s3c_config_wakeup_source(void)
-{
+
+
+#if 0
+void s3c_config_wakeup_source(void) {
 	unsigned int eint0pend_val;
 
 	/* Power key (GPN5) */
@@ -1307,7 +1276,7 @@ void s3c_config_wakeup_source(void)
 
 	/* Wake-up source 
 	 * ONEDRAM_INT(EINT0), WLAN_HOST_WAKE(EINT1) HALL_SW(EINT4), Power key(EINT5),
-	 * T_FLASH(EINT6), DET_35(EINT10), EAR_SEND_END(EINT11),
+	 * T_FLASH(EINT6), DET_35(EINT10), EAR_SEND_END(EINT11), Hold key(EINT17), 
 	 * TA_CONNECTED(EINT19),PROXIMITY_SENSOR(EINT20),
 	 * BT_HOST_WAKE(EINT22), CHG_ING(EINT25)
 	 */
@@ -1319,45 +1288,44 @@ void s3c_config_wakeup_source(void)
        //[[HYH_20100512
 	if(system_rev < 0x80)
 	{
-	      if(get_headset_status()==0)//hw bug
-	      eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 20) |  (0x1 << 19) | 
-       		(0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) |  0x1;
-	      
-	      else
-       	eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 20) |  (0x1 << 19) | 
-       		(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) |  0x1;
+		if(get_headset_status()==0)//hw bug
+			eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 20) |  (0x1 << 19) | (0x1 << 17) |
+       				(0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) |  0x1;
+		else
+			eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 20) |  (0x1 << 19) | 
+       				(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
 	}
-       else
-       {
-              if(get_headset_status()==0)//hw bug
-               	eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 20) |  (0x1 << 19) |
-           		(0x1 << 10) | (0x1 << 9) |(0x1 << 6) |  (0x1 << 5) | (0x1 << 4) | (0x1 << 1) |  0x1;
-              else
-       	      eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 21) |(0x1 << 20) |  (0x1 << 19) | 
-       		(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) |  0x1;
+	else
+	{
+		if(get_headset_status()==0)//hw bug
+			eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 20) |  (0x1 << 19) | (0x1 << 17) |
+				(0x1 << 10) | (0x1 << 9) |(0x1 << 6) |  (0x1 << 5) | (0x1 << 4) | (0x1 << 1) |  0x1;
+		else
+			eint0pend_val |= (0x1 << 25) | (0x1 << 22) |(0x1 << 21) |(0x1 << 20) |  (0x1 << 19) | 
+				(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
 	}
 	//]]HYH_20100512
 	
 	__raw_writel(eint0pend_val, S3C64XX_EINT0PEND);
 
-      //[[HYH_20100512
-      if(system_rev < 0x80)
-      {
-             if(get_headset_status()==0)//hw bug
-             eint0pend_val = (0x1 << 25) | (0x1 << 22) | (0x1 << 20) | (0x1 << 19) |
-			(0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
-             else
-		eint0pend_val = (0x1 << 25) | (0x1 << 22) | (0x1 << 20) | (0x1 << 19) |
-			(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
+	//[[HYH_20100512
+	if(system_rev < 0x80)
+	{
+		if(get_headset_status()==0)//hw bug
+			eint0pend_val = (0x1 << 25) | (0x1 << 22) | (0x1 << 20) | (0x1 << 19) | (0x1 << 17) |
+				(0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
+		else
+			eint0pend_val = (0x1 << 25) | (0x1 << 22) | (0x1 << 20) | (0x1 << 19) |
+				(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
 	}
-      else
-      {
-	      if(get_headset_status()==0)//hw bug
-	        	eint0pend_val = (0x1 << 25) | (0x1 << 22) | (0x1 << 20) | (0x1 << 19) | 
-			    (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
-	      else
-		      eint0pend_val = (0x1 << 25) | (0x1 << 22) |(0x1 << 21) | (0x1 << 20) | (0x1 << 19) | 
-			(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
+	else
+	{
+		if(get_headset_status()==0)//hw bug
+			eint0pend_val = (0x1 << 25) | (0x1 << 22) | (0x1 << 20) | (0x1 << 19) | (0x1 << 17) | 
+				(0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
+		else
+			eint0pend_val = (0x1 << 25) | (0x1 << 22) |(0x1 << 21) | (0x1 << 20) | (0x1 << 19) | 
+				(0x1 << 11) | (0x1 << 10) | (0x1 << 9) |(0x1 << 6) | (0x1 << 5) | (0x1 << 4) | (0x1 << 1) | 0x1;
 	}
 	//]]HYH_20100512
 	
@@ -1373,306 +1341,61 @@ void s3c_config_wakeup_source(void)
 		__raw_writel((__raw_readl(S3C_PWR_CFG) | (0x1 << 10)), S3C_PWR_CFG);
 	}
 }
+#else
+void s3c_config_wakeup_source(void) {
+	unsigned int eint0pend_val;
+
+	/* Power key (GPN5) */
+	s3c_gpio_cfgpin(GPIO_POWER_N, S3C64XX_GPN5_EINT5);
+	s3c_gpio_setpull(GPIO_POWER_N, S3C_GPIO_PULL_NONE);
+	__raw_writel((__raw_readl(S3C64XX_EINT0CON0) & ~(0x7 << 8)) |
+			(S3C64XX_EXTINT_BOTHEDGE << 8), S3C64XX_EINT0CON0);
+
+	/* Wake-up source 
+	 * ONEDRAM_INT    (EINT0), 
+	 * WLAN_HOST_WAKE (EINT1), 
+	 * SIM_nDETECT    (EINT4),
+	 * Power key      (EINT5), 
+	 * T_FLASH_DETECT (EINT6),
+	 * DET_3.5        (EINT10), 
+	 * EAR_SEND_END   (EINT11), 
+	 * Hold key       (EINT17), 
+	 * TA_CONNECTED   (EINT19),
+	 * BT_HOST_WAKE   (EINT22), 
+	 * CHG_ING        (EINT25)
+	 */
+
+	//SEC_BP_WONSUK_20090811
+	//register INTB(EINT9) with wakeup source 
+	
+	// WLAN_HOST_WAKE(EINT1) Wake-up Source disable temporary by hskang
+	eint0pend_val= __raw_readl(S3C64XX_EINT0PEND);
+	eint0pend_val |= (0x1 << 25) | (0x1 << 22) | (0x1 << 19) |
+		(0x1 << 17) | (0x1 << 11) | (0x1 << 10) | (0x1 << 9) | (0x1 << 6) | (0x1 << 5) | (0x1 << 4) /*| (0x1 << 1)*/ | 0x1;
+	__raw_writel(eint0pend_val, S3C64XX_EINT0PEND);
+
+	eint0pend_val  = (0x1 << 25) | (0x1 << 22) | (0x1 << 19) |
+		(0x1 << 17) | (0x1 << 11) | (0x1 << 10) | (0x1 << 9) | (0x1 << 6) | (0x1 << 5) | (0x1 << 4) /*| (0x1 << 1)*/ | 0x1;
+	__raw_writel(~eint0pend_val, S3C64XX_EINT0MASK);
+
+	__raw_writel((0x0FFFFFFF & ~eint0pend_val), S3C_EINT_MASK);
+
+	/* Alarm Wakeup Enable */
+#if 0
+	__raw_writel((__raw_readl(S3C_PWR_CFG) & ~(0x1 << 10)), S3C_PWR_CFG);
+#else
+	if (!ftm_sleep)
+		__raw_writel((__raw_readl(S3C_PWR_CFG) & ~(0x1 << 10)), S3C_PWR_CFG);
+	else {
+		pr_info("%s: RTC alarm is disabled\n", __func__);
+		__raw_writel((__raw_readl(S3C_PWR_CFG) | (0x1 << 10)), S3C_PWR_CFG);
+	}
+#endif
+}
+#endif
 EXPORT_SYMBOL(s3c_config_wakeup_source);
 
 #ifdef DUMP_GPIO_DEBUG_INFO
-/******************************************************************
- * Dump GPIO
- * ****************************************************************/
-#define GPA_SIZE	8
-#define GPB_SIZE	7
-#define GPC_SIZE	8
-#define GPD_SIZE	5
-#define GPE_SIZE	5
-#define GPF_SIZE	16
-#define GPG_SIZE	7
-#define GPH_SIZE	10
-#define GPI_SIZE	16
-#define GPJ_SIZE	12
-#define GPK_SIZE	16
-#define GPL_SIZE	15
-#define GPM_SIZE	6
-#define GPN_SIZE	16
-#define GPO_SIZE	16
-#define GPP_SIZE	15
-#define GPQ_SIZE	9
-
-static char* GPA_str[GPA_SIZE] = { 
-	"GPA0 AP_FLM_RXD",
-	"GPA1 AP_FLM_TXD",
-	"GPA2 USB_SEL",
-	"GPA3 MSENSE_RST",
-	"GPA4 BT_UART_RXD",
-	"GPA5 BT_UART_TXD",
-	"GPA6 BT_UART_CTS",
-	"GPA7 BT_UART_RTS",
-};
-
-static char* GPB_str[GPB_SIZE] = { 
-	"GPB0 AP_RXD",
-	"GPB1 AP_TXD",
-	"GPB2 CAM_SCL",
-	"GPB3 CAM_SDA",
-	"GPB4 TOUCH_EN",
-	"GPB5 AP_SCL_3.0V",
-	"GPB6 AP_SDA_3.0V",
-};
-
-static char* GPC_str[GPC_SIZE] = { 
-	"GPC0 HM_MISO",
-	"GPC1 HM_CLK",
-	"GPC1 HM_MOSI",
-	"GPC3 HM_NCS",
-	"GPC4 WLAN_CMD",
-	"GPC5 WLAN_CLK",
-	"GPC6 WLAN_WAKE",
-	"GPC7 BT_WAKE",
-};
-
-static char* GPD_str[GPD_SIZE] = { 
-	"GPD0 I2C_SCLK",
-	"GPD1 BT_WLAN_REG_ON",
-	"GPD2 I2S_SYNC",
-	"GPD3 I2S_SDI",
-	"GPD4 I2S_SDO",
-};
-
-static char* GPE_str[GPE_SIZE] = { 
-	"GPE0 BT_RESET",
-	"GPE1 BOOT",
-	"GPE2 WLAN_RESET",
-	"GPE3 PWR_I2C_SCL",
-	"GPE4 PWR_I2C_SDA",
-};
-
-static char* GPF_str[GPF_SIZE] = { 
-	"GPF0 CAM_MCLK",
-	"GPF1 CAM_HSYNC",
-	"GPF2 CAM_PCLK",
-	"GPF3 CAM_3M_nRST",
-	"GPF4 CAM_VSYNC",
-	"GPF5 CAM_D(0)",
-	"GPF6 CAM_D(1)",
-	"GPF7 CAM_D(2)",
-	"GPF8 CAM_D(3)",
-	"GPF9 CAM_D(4)",
-	"GPF10 CAM_D(5)",
-	"GPF11 CAM_D(6)",
-	"GPF12 CAM_D(7)",
-	"GPF13 CAM_CIF_nRST",
-	"GPF14 CAM_CIF_nSTBY",
-	"GPF15 VIB_PWM",
-};
-
-static char* GPG_str[GPG_SIZE] = { 
-	"GPG0 T_FLASH_CLK",
-	"GPG1 T_FLASH_CMD",
-	"GPG2 T_FLASH_D(0)",
-	"GPG3 T_FLASH_D(1)",
-	"GPG4 T_FLASH_D(2)",
-	"GPG5 T_FLASH_D(3)",
-	"GPG6",
-};
-
-static char* GPH_str[GPH_SIZE] = { 
-	"GPH0",
-	"GPH1",
-	"GPH2",
-	"GPH3",
-	"GPH4",
-	"GPH5",
-	"GPH6 WLAN_DATA(0)",
-	"GPH7 WLAN_DATA(1)",
-	"GPH8 WLAN_DATA(2)",
-	"GPH9 WLAN_DATA(3)",
-};
-
-static char* GPI_str[GPI_SIZE] = { 
-	"GPI0",
-	"GPI1",
-	"GPI2 LCD_D(0)",
-	"GPI3 LCD_D(1)",
-	"GPI4 LCD_D(2)",
-	"GPI5 LCD_D(3)",
-	"GPI6 LCD_D(4)",
-	"GPI7 LCD_D(5)",
-	"GPI8",
-	"GPI9",
-	"GPI10 LCD_D(6)",
-	"GPI11 LCD_D(7)",
-	"GPI12 LCD_D(8)",
-	"GPI13 LCD_D(9)",
-	"GPI14 LCD_D(10)",
-	"GPI15 LCD_D(11)",
-};
-
-static char* GPJ_str[GPJ_SIZE] = { 
-	"GPJ0",
-	"GPJ1",
-	"GPJ2 LCD_D(12)",
-	"GPJ3 LCD_D(13)",
-	"GPJ4 LCD_D(14)",
-	"GPJ5 LCD_D(15)",
-	"GPJ6 LCD_D(16)",
-	"GPJ7 LCD_D(17)",
-	"GPJ8 LCD_HSYNC",
-	"GPJ9 LCD_VSYNC",
-	"GPJ10 LCD_DE",
-	"GPJ11 LCD_MCLK",
-};
-
-static char* GPK_str[GPK_SIZE] = { 
-	"GPK0 TA_EN",
-	"GPK1 AUDIO_EN",
-	"GPK2 PHONE_ON",
-	"GPK3 MICBIAS_EN",
-	"GPK4 UART_SEL",
-	"GPK5 FM_nRST",
-	"GPK6 CAM_EN",
-	"GPK7 nMSM_RST",
-	"GPK8 KBR(0)",
-	"GPK9 KBR(1)",
-	"GPK10 KBR(2)",
-	"GPK11 KBR(3)",
-	"GPK12 KBR(4)",
-	"GPK13 KBR(5)",
-	"GPK14 KBR(6)",
-	"GPK15 VREG_MSMP_2.6V",
-};
-
-static char* GPL_str[GPL_SIZE] = { 
-	"GPL0 KBC(0)",
-	"GPL1 KBC(1)",
-	"GPL2 KBC(2)",
-	"GPL3 KBC(3)",
-	"GPL4 KBC(4)",
-	"GPL5 KBC(5)",
-	"GPL6 KBC(6)",
-	"GPL7 USIM_BOOT",
-	"GPL8 CAM_3M_nSTBY",
-	"GPL9 HM_INT",
-	"GPL10 FM_INT",
-	"GPL11 TA_nCONNECTED",
-	"GPL12 TOUCH_INT",
-	"GPL13 CP_BOOT_SEL",
-	"GPL14 BT_HOST_WAKE",
-};
-
-static char* GPM_str[GPM_SIZE] = { 
-	"GPM0 FM_SCL",
-	"GPM1 FM_SDA",
-	"GPM2 TA_nCHG",
-	"GPM3 PDA_ACTIVE",
-	"GPM4 TOUCH_SCL",
-	"GPM5 TOUCH_SDA",
-};
-
-static char* GPN_str[GPN_SIZE] = { 
-	"GPN0 nONED_INT_AP",
-	"GPN1 WLAN_HOST_WAKE",
-	"GPN2 MSENSE_IRQ",
-	"GPN3 ACC_INT",
-	"GPN4 SLIDE_INT",
-	"GPN5 nPOWER",
-	"GPN6 T_FLASH_DETECT",
-	"GPN7 PHONE_ACTIVE",
-	"GPN8 PM_INT_N",
-	"GPN9 INTB",
-	"GPN10 DET_3.5",
-	"GPN11 EAR_SEND_END",
-	"GPN12 RESOUT_N",
-	"GPN13 BOOT_EINT13",
-	"GPN14 BOOT_EINT14",
-	"GPN15 BOOT_EINT15",
-};
-
-static char* GPO_str[GPO_SIZE] = { 
-	"GPO0 ONENAND_CS",
-	"GPO1",
-	"GPO2 LCD_nRST",
-	"GPO3",
-	"GPO4",
-	"GPO5",
-	"GPO6 LCD_nCS",
-	"GPO7 LCD_SI",
-	"GPO8",
-	"GPO9",
-	"GPO10",
-	"GPO11",
-	"GPO12 LCD_VENDOR",
-	"GPO13 LCD_CLK",
-	"GPO14",
-	"GPO15",
-};
-
-static char* GPP_str[GPP_SIZE] = { 
-	"GPP0",
-	"GPP1",
-	"GPP2",
-	"GPP3",
-	"GPP4",
-	"GPP5",
-	"GPP6",
-	"GPP7",
-	"GPP8",
-	"GPP9",
-	"GPP10",
-	"GPP11",
-	"GPP12",
-	"GPP13 AP_PSHOLD",
-	"GPP14",
-};
-
-static char* GPQ_str[GPQ_SIZE] = { 
-	"GPQ0",
-	"GPQ1",
-	"GPQ2",
-	"GPQ3 HMLDO_EN",
-	"GPQ4 MIC_SEL",
-	"GPQ5 VIB_EN",
-	"GPQ6 HM_EN",
-	"GPQ7",
-	"GPQ8",
-};
-
-void s3c_dump_gpio(void)
-{
-#define CHECK_GPIO(pin, name)						\
-	do {								\
-		unsigned int pinfun = s3c_gpio_get_cfgpin(pin);		\
-		unsigned int pinpud = s3c_gpio_getpull(pin);		\
-		if (pinfun != 0 || pinpud  != 1)			\
-			printk(KERN_INFO "%s->function:%x, pull up/down:%x\n",\
-					name, pinfun, pinpud);		\
-	} while (0)
-
-#define CHECK_GPIO_PORT(port)						\
-	do {								\
-		int i;							\
-		for (i = 0; i < GP##port##_SIZE; i++)			\
-			CHECK_GPIO(S3C64XX_GP##port(i), GP##port##_str[i]);\
-	} while (0)
-
-	printk("******************************************\n");	
-	CHECK_GPIO_PORT(A);
-	CHECK_GPIO_PORT(B);
-	CHECK_GPIO_PORT(C);
-	CHECK_GPIO_PORT(D);
-	CHECK_GPIO_PORT(E);
-	CHECK_GPIO_PORT(F);
-	CHECK_GPIO_PORT(G);
-	CHECK_GPIO_PORT(H);
-	CHECK_GPIO_PORT(I);
-	CHECK_GPIO_PORT(J);
-	CHECK_GPIO_PORT(K);
-	CHECK_GPIO_PORT(L);
-	CHECK_GPIO_PORT(M);
-	CHECK_GPIO_PORT(N);
-	CHECK_GPIO_PORT(O);
-	CHECK_GPIO_PORT(P);
-	CHECK_GPIO_PORT(Q);
-	printk("******************************************\n");	
-}
-EXPORT_SYMBOL(s3c_dump_gpio);
+    #include "s3c_debug_gpio.c"
 #endif
 

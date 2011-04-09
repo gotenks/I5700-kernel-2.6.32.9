@@ -5,7 +5,7 @@
 #
 
 ifeq ($(CONFIG_MACH_INFOBOWLQ),y)
-EXTRA_CFLAGS 	+= -DCONFIG_VIDEO_SAMSUNG_S5K4CA -DCONFIG_FLASH_AAT1271A 
+EXTRA_CFLAGS 	+= -DCONFIG_VIDEO_SAMSUNG_S5K4CA
 endif
 
 SENSOR_DIR		= samsung
@@ -18,16 +18,8 @@ obj-y			+= s3c_camera.o
 
 s3c_camera-y	+= s3c_camif.o s3c_camera_driver.o
 
-
 #
-# Camera Flash
+# 3M Camera Sensor
 #
-
-ifeq ($(CONFIG_MACH_INFOBOWLQ),y)
-s3c_camera-y += $(SENSOR_DIR)/flash/aat1271a.o
-endif
-ifeq ($(CONFIG_MACH_CYGNUS),y)
-#s3c_camera-y += $(SENSOR_DIR)/flash/aat1271a.o
-endif
 
 obj-$(CONFIG_VIDEO_SAMSUNG)	+= samsung/

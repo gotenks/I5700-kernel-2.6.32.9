@@ -215,6 +215,7 @@ int audio_init(void)
 	}
 	#endif
 	
+	#if 0       
        //[[HYH_20100512
        if(system_rev>=0x80) {
 		// we control ear mic bias in sec_headset.c
@@ -229,6 +230,7 @@ int audio_init(void)
        	s3c_gpio_setpull(GPIO_EAR_MIC_BIAS, S3C_GPIO_PULL_NONE);
 	}
        //]]HYH_20100512
+	#endif
 
 	return 0;
 }
@@ -378,8 +380,8 @@ int mic_ear_enable(int en)
 {
 	P("EAR MIC EN : %d", en);
 
-      //[[HYH_20100512
-      #if 0
+	//[[HYH_20100512
+	#if 0
 	if(system_rev>=0x80)
 	{
 	    //Do Noting...
@@ -390,8 +392,8 @@ int mic_ear_enable(int en)
        		gpio_set_value(GPIO_EAR_MIC_BIAS, 0);
        	else
        		gpio_set_value(GPIO_EAR_MIC_BIAS, 1);
-      }
-      #endif
+	}
+	#endif
 	//]]HYH_20100512
 
 	return 0;

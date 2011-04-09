@@ -594,8 +594,7 @@ static int pmem_mmap(struct file *file, struct vm_area_struct *vma)
 	down_write(&data->sem);
 	/* check this file isn't already mmaped, for submaps check this file
 	 * has never been mmaped */
-	if ((data->flags & PMEM_FLAGS_MASTERMAP) ||
-	    (data->flags & PMEM_FLAGS_SUBMAP) ||
+	if ((data->flags & PMEM_FLAGS_SUBMAP) ||
 	    (data->flags & PMEM_FLAGS_UNSUBMAP)) {
 #if PMEM_DEBUG
 		printk(KERN_ERR "pmem: you can only mmap a pmem file once, "
@@ -757,6 +756,7 @@ end:
 	fput(file);
 	return -1;
 }
+EXPORT_SYMBOL(get_pmem_file);
 
 void put_pmem_file(struct file *file)
 {
@@ -779,6 +779,7 @@ void put_pmem_file(struct file *file)
 #endif
 	fput(file);
 }
+EXPORT_SYMBOL(put_pmem_file);
 
 void flush_pmem_file(struct file *file, unsigned long offset, unsigned long len)
 {
@@ -820,6 +821,7 @@ void flush_pmem_file(struct file *file, unsigned long offset, unsigned long len)
 end:
 	up_read(&data->sem);
 }
+EXPORT_SYMBOL(flush_pmem_file);
 
 static int pmem_connect(unsigned long connect, struct file *file)
 {

@@ -171,10 +171,12 @@ static struct struct_kernel_log_mark kernel_log_mark = {
 #include <linux/io.h>
 #include <linux/platform_device.h>
 
+#include <mach/infobowlq_gpio.h>
+//#include <mach/hardware.h>
 #include <plat/reserved_mem.h>
 
 
-static struct sec_log_buf s_log_buf;			
+static struct sec_log_buf s_log_buf;
 
 extern struct class *sec_class;
 
@@ -199,7 +201,7 @@ void sec_log_buf_init(void)
 	s_log_buf.count = (unsigned int *)(start + 4);
 	s_log_buf.data = (char *)(start + SEC_LOG_BUF_FLAG_SIZE);
 
-	sec_log_dev = device_create_drvdata(sec_class, NULL, 0, NULL, "sec_log");
+	sec_log_dev = device_create(sec_class, NULL, 0, NULL, "sec_log");
 	if (IS_ERR(sec_log_dev))
 		pr_err("Failed to create device(sec_log)!\n");
 

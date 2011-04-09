@@ -19,6 +19,7 @@ config ANDROID_LOGGER
 config ANDROID_RAM_CONSOLE
 	bool "Android RAM buffer console"
 	default n
+	depends on SEC_LOG_BUF
 
 config ANDROID_RAM_CONSOLE_ENABLE_VERBOSE
 	bool "Enable verbose console messages on Android RAM console"

@@ -1,0 +1,93 @@
+file /init                ../initramfs/init                0755 0 0
+file /init.rc             ../initramfs/init.rc             0644 0 0
+file /recovery.rc         ../initramfs/recovery.rc         0644 0 0
+file /recovery_hardkey.rc ../initramfs/recovery_hardkey.rc 0644 0 0
+file /fota.rc             ../initramfs/fota.rc             0644 0 0
+file /default.prop        ../initramfs/default.prop        0644 0 0
+file /ueventd.rc          ../initramfs/ueventd.rc          0644 0 0
+file /ueventd.spica.rc    ../initramfs/ueventd.spica.rc    0644 0 0
+file /ueventd.goldfish.rc ../initramfs/ueventd.goldfish.rc 0644 0 0
+
+dir /lib 0755 0 0
+dir /lib/modules 0755 0 0
+file /lib/modules/crc32.ko          ../initramfs/lib/modules/crc32.ko          0644 0 0
+file /lib/modules/dhd.ko            ../initramfs/lib/modules/dhd.ko            0644 0 0
+file /lib/modules/rfs.ko            ../initramfs/lib/modules/rfs.ko            0644 0 0
+file /lib/modules/dpram.ko          ../initramfs/lib/modules/dpram.ko          0644 0 0
+file /lib/modules/dpram_recovery.ko ../initramfs/lib/modules/dpram_recovery.ko 0644 0 0
+file /lib/modules/multipdp.ko       ../initramfs/lib/modules/multipdp.ko       0644 0 0
+file /lib/modules/param.ko          ../initramfs/lib/modules/param.ko          0644 0 0
+file /lib/modules/vibrator.ko       ../initramfs/lib/modules/vibrator.ko       0644 0 0
+file /lib/modules/xsr_stl.ko        ../initramfs/lib/modules/xsr_stl.ko        0644 0 0
+file /lib/modules/xsr.ko            ../initramfs/lib/modules/xsr.ko            0644 0 0
+file /lib/modules/xsr_debug.ko      ../initramfs/lib/modules/xsr_debug.ko      0644 0 0
+file /lib/modules/xt_TCPMSS.ko      ../initramfs/lib/modules/xt_TCPMSS.ko      0644 0 0
+file /lib/modules/tun.ko            ../initramfs/lib/modules/tun.ko            0644 0 0
+
+dir /sbin 0755 0 0
+file  /sbin/su       ../initramfs/sbin/su       6755 0 0
+file  /sbin/recovery ../initramfs/sbin/recovery 0755 0 0
+file  /sbin/adbd     ../initramfs/sbin/adbd     0755 0 0
+file  /sbin/adbd2    ../initramfs/sbin/adbd2    0755 0 0
+file  /sbin/ash      ../initramfs/sbin/ash      0755 0 0
+file  /sbin/ueventd  ../initramfs/sbin/ueventd  0755 0 0
+#slink /sbin/ueventd    /init                    0755 0 0
+
+dir /res 0755 0 0
+dir /res/images 0755 0 0
+file /res/images/indeterminate1.png                 ../initramfs/res/images/indeterminate1.png                 0644 0 0
+file /res/images/indeterminate2.png                 ../initramfs/res/images/indeterminate2.png                 0644 0 0
+file /res/images/indeterminate3.png                 ../initramfs/res/images/indeterminate3.png                 0644 0 0
+file /res/images/indeterminate4.png                 ../initramfs/res/images/indeterminate4.png                 0644 0 0
+file /res/images/indeterminate5.png                 ../initramfs/res/images/indeterminate5.png                 0644 0 0
+file /res/images/indeterminate6.png                 ../initramfs/res/images/indeterminate6.png                 0644 0 0
+file /res/images/icon_firmware_install.png          ../initramfs/res/images/icon_firmware_install.png          0644 0 0
+file /res/images/icon_error.png                     ../initramfs/res/images/icon_error.png                     0644 0 0
+file /res/images/icon_installing.png                ../initramfs/res/images/icon_installing.png                0644 0 0
+file /res/images/icon_firmware_error.png            ../initramfs/res/images/icon_firmware_error.png            0644 0 0
+file /res/images/progress_bar_empty_right_round.png ../initramfs/res/images/progress_bar_empty_right_round.png 0644 0 0
+file /res/images/progress_bar_fill.png              ../initramfs/res/images/progress_bar_fill.png              0644 0 0
+file /res/images/progress_bar_empty.png             ../initramfs/res/images/progress_bar_empty.png             0644 0 0
+file /res/images/progress_bar_right_round.png       ../initramfs/res/images/progress_bar_right_round.png       0644 0 0
+file /res/images/progress_bar_left_round.png        ../initramfs/res/images/progress_bar_left_round.png        0644 0 0
+file /res/images/progress_bar_empty_left_round.png  ../initramfs/res/images/progress_bar_empty_left_round.png  0644 0 0
+
+dir /sys 0755 0 0
+#file /sys/stgloc ../initramfs/sys/stgloc 0644 0 0
+
+dir /proc 0755 0 0
+#file /proc/stgloc ../initramfs/proc/stgloc 0644 0 0
+
+dir /dev 0755 0 0
+#file /dev/stgloc ../initramfs/dev/stgloc 0644 0 0
+
+dir /tmp 0755 0 0
+file /tmp/s3c-keypad-rev0020.kl      ../initramfs/tmp/s3c-keypad-rev0020.kl      0644 0 0
+file /tmp/s3c-keypad-rev0000.kcm.bin ../initramfs/tmp/s3c-keypad-rev0000.kcm.bin 0666 0 0
+file /tmp/s3c-keypad-rev0020.kcm.bin ../initramfs/tmp/s3c-keypad-rev0020.kcm.bin 0666 0 0
+file /tmp/s3c-keypad-rev0000.kl      ../initramfs/tmp/s3c-keypad-rev0000.kl      0644 0 0
+file /tmp/s3c-keypad-rev0010.kl      ../initramfs/tmp/s3c-keypad-rev0010.kl      0644 0 0
+
+dir /tmp/bootchart 0755 0 0
+file /tmp/bootchart/stgloc           ../initramfs/tmp/bootchart/stgloc           0644 0 0
+file /tmp/sec_headset.kl             ../initramfs/tmp/sec_headset.kl             0755 0 0
+file /tmp/s3c-keypad-rev0010.kcm.bin ../initramfs/tmp/s3c-keypad-rev0010.kcm.bin 0666 0 0
+
+dir /data 0771 1000 1000
+
+dir /system 0777 0 0
+dir /system/etc 0755 0 0
+slink /etc /system/etc 0777 0 0
+#file /system/etc/ld.so.cache ../initramfs/system/etc/ld.so.cache 0644 0 0
+
+dir /xbin     0755 0 0
+dir /xbin/lib 0755 0 0
+file /xbin/bml_flash          ../initramfs/xbin/bml_flash        0755 0 0
+file /xbin/busybox            ../initramfs/xbin/busybox          0755 0 0
+file /xbin/stl.format         ../initramfs/xbin/stl.format       0755 0 0
+file /xbin/lib/libc.so        ../initramfs/xbin/lib/libc.so      0755 0 0
+file /xbin/lib/libcutils.so   ../initramfs/xbin/lib/libcutils.so 0755 0 0
+file /xbin/lib/libdl.so       ../initramfs/xbin/lib/libdl.so     0755 0 0
+file /xbin/lib/liblog.so      ../initramfs/xbin/lib/liblog.so    0755 0 0
+file /xbin/lib/libm.so        ../initramfs/xbin/lib/libm.so      0755 0 0
+file /xbin/lib/libstdc++.so   ../initramfs/xbin/lib/libstdc++.so 0755 0 0

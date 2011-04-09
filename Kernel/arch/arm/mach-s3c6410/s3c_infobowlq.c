@@ -45,7 +45,7 @@ static struct platform_device s3c_device_i2c4 = {
 };
 #endif
 
-// dgahn.smd: move to rev01
+#if 0
 static struct i2c_gpio_platform_data i2c5_platdata = {
 	.sda_pin		= GPIO_AP_SDA/*GPIO_TOUCH_I2C_SDA*/,
 	.scl_pin		= GPIO_AP_SCL/*GPIO_TOUCH_I2C_SCL*/,
@@ -60,6 +60,7 @@ static struct platform_device s3c_device_i2c5 = {
 	.id					= 5,
 	.dev.platform_data	= &i2c5_platdata,
 };
+#endif
 
 static struct i2c_gpio_platform_data i2c6_platdata = {
 	.sda_pin		= GPIO_TOUCH_I2C_SDA,

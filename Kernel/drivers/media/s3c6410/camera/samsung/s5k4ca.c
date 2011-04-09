@@ -38,7 +38,7 @@
 #define I2C_BURST_MODE //dha23 100325 카메라 기동 시간 줄이기 위해 I2C Burst mode 사용.
 // Purpose of verifying I2C operaion. must be ignored later.
 //#define LOCAL_CONFIG_S5K4CA_I2C_TEST
-#define CONFIG_FLASH_AAT1271A //dha23 101004
+//#define CONFIG_FLASH_AAT1271A //dha23 101004
 
 static struct i2c_driver s5k4ca_driver;
 

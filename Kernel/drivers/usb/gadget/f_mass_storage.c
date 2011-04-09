@@ -2898,10 +2898,13 @@ fsg_function_bind(struct usb_configuration *c, struct usb_function *f)
 		curlun->ro = 0;
 		curlun->dev.release = lun_release;
 		/* use "usb_mass_storage" platform device as parent if available */
+		/*
 		if (fsg->pdev)
 			curlun->dev.parent = &fsg->pdev->dev;
 		else
 			curlun->dev.parent = &cdev->gadget->dev;
+		*/
+		curlun->dev.parent = &cdev->gadget->dev;
 		dev_set_drvdata(&curlun->dev, fsg);
 				dev_set_name(&curlun->dev,"lun%d", i);
 

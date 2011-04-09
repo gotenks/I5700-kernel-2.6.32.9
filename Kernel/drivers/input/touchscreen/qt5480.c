@@ -2038,7 +2038,7 @@ static void qt5480_charger_workaround(struct work_struct *aWork)
   {
     ret = qt5480_i2c_write(REG_MEDIAN_FILTER_LENGTH, 3);
     DO_IF_TRUE(ret < 0, PRINT_MSG("write Median Filter Length Register failed(%d)!\n", ret));
-    PRINT_MSG("Charger connected, changing MEDIAN_FILTER_LENGTH\n");
+    //PRINT_MSG("Charger connected, changing MEDIAN_FILTER_LENGTH\n");
 
 //    ret = qt5480_i2c_write(REG_IIR_FILTER_CONTROL, 4);
 //    DO_IF_TRUE(ret < 0, PRINT_MSG("write IIR Filter Control Register failed(%d)!\n", ret));
@@ -2050,7 +2050,7 @@ static void qt5480_charger_workaround(struct work_struct *aWork)
   {
     ret = qt5480_i2c_write(REG_MEDIAN_FILTER_LENGTH, g_qt5480_setup[REG_MEDIAN_FILTER_LENGTH - 512]);
     DO_IF_TRUE(ret < 0, PRINT_MSG("write Median Filter Length Register failed(%d)!\n", ret));
-    PRINT_MSG("Charger disconnected, reverting MEDIAN_FILTER_LENGTH\n");
+    //PRINT_MSG("Charger disconnected, reverting MEDIAN_FILTER_LENGTH\n");
 
 //    ret = qt5480_i2c_write(REG_IIR_FILTER_CONTROL, g_qt5480_setup[REG_IIR_FILTER_CONTROL - 512]);
 //    DO_IF_TRUE(ret < 0, PRINT_MSG("write IIR Filter Control Register failed(%d)!\n", ret));

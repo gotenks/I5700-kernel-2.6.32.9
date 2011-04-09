@@ -26,6 +26,9 @@
 #include <linux/rslib.h>
 #endif
 
+#include <mach/infobowlq_gpio.h>
+#include <plat/reserved_mem.h>
+
 struct ram_console_buffer {
 	uint32_t    sig;
 	uint32_t    start;
@@ -173,13 +176,13 @@ ram_console_save_old(struct ram_console_buffer *buffer, char *dest)
 			size = buffer->data + ram_console_buffer_size - block;
 		numerr = ram_console_decode_rs8(block, size, par);
 		if (numerr > 0) {
-#if 0
+#if 1
 			printk(KERN_INFO "ram_console: error in block %p, %d\n",
 			       block, numerr);
 #endif
 			ram_console_corrected_bytes += numerr;
 		} else if (numerr < 0) {
-#if 0
+#if 1
 			printk(KERN_INFO "ram_console: uncorrectable error in "
 			       "block %p\n", block);
 #endif
@@ -310,10 +313,17 @@ static int __init ram_console_init(struct ram_console_buffer *buffer,
 #ifdef CONFIG_ANDROID_RAM_CONSOLE_EARLY_INIT
 static int __init ram_console_early_init(void)
 {
+#if 1
 	return ram_console_init((struct ram_console_buffer *)
 		CONFIG_ANDROID_RAM_CONSOLE_EARLY_ADDR,
 		CONFIG_ANDROID_RAM_CONSOLE_EARLY_SIZE,
 		ram_console_old_log_init_buffer);
+#else
+	return ram_console_init((struct ram_console_buffer *)
+		SEC_RAM_CONSOLE_BUF_START,
+		SEC_RAM_CONSOLE_BUF_SIZE,
+		ram_console_old_log_init_buffer);
+#endif
 }
 #else
 static int ram_console_driver_probe(struct platform_device *pdev)

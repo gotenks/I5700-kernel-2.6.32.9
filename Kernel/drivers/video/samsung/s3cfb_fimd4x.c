@@ -1935,6 +1935,8 @@ static struct sleep_save s3c_lcd_save[] = {
 
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static int lcd_pm_status = 0;
+static int lcd_clock_status = 0;
+int lcd_late_resume = 1;
 
 static int s3cfb_suspend_sub(s3c_fb_info_t *fbi)
 {
@@ -1960,8 +1962,6 @@ static int s3cfb_suspend_sub(s3c_fb_info_t *fbi)
         s3c_set_normal_cfg(S3C64XX_DOMAIN_F, S3C64XX_LP_MODE, S3C64XX_LCD);
 #endif /* USE_LCD_DOMAIN_GATING */
 
-	lcd_pm_status = 0;
-
         return 0;
 }
 
@@ -1983,14 +1983,12 @@ static int s3cfb_resume_sub(s3c_fb_info_t *fbi)
 
         s3cfb_start_lcd();
 
-	lcd_pm_status = 1;
-
         return 0;
 }
 
 int s3cfb_is_clock_on(void)
 {
-	return lcd_pm_status;
+	return lcd_clock_status;
 }
 
 void s3cfb_enable_clock_power(void)
@@ -2000,28 +1998,38 @@ void s3cfb_enable_clock_power(void)
 	early_suspend_ptr = get_earlysuspend_ptr();
 
 	s3c_fb_info_t *info = container_of(early_suspend_ptr, s3c_fb_info_t, early_suspend);
-
 	s3cfb_resume_sub(info);
+
+	lcd_clock_status = 1;
+	lcd_pm_status = 1;
 }
 
 void s3cfb_early_suspend(struct early_suspend *h)
 {
 	s3c_fb_info_t *info = container_of(h, s3c_fb_info_t, early_suspend);
 
-	printk("#%s\n", __func__);
+	//printk("#%s\n", __func__);
+
+	lcd_late_resume = 0;
 
 	s3cfb_suspend_sub(info);
+
+	lcd_clock_status = 0;
+	lcd_pm_status = 0;
 }
 
 void s3cfb_late_resume(struct early_suspend *h)
 {
 	s3c_fb_info_t *info = container_of(h, s3c_fb_info_t, early_suspend);
 
-	printk("#%s\n", __func__);
+	//printk("#%s\n", __func__);
 
 	if (lcd_pm_status == 0) {
 		s3cfb_resume_sub(info);
 	}
+
+	lcd_clock_status = 1;
+	lcd_late_resume = 1;
 }
 /*
  *  Suspend
@@ -2031,11 +2039,13 @@ int s3cfb_suspend(struct platform_device *dev, pm_message_t state)
 	struct fb_info *fbinfo = platform_get_drvdata(dev);
 	s3c_fb_info_t *info = fbinfo->par;
 
-	printk("#%s\n", __func__);
+	//printk("#%s\n", __func__);
 
 	if (lcd_pm_status != 0) {
 		s3cfb_suspend_sub(info);
 	}
+
+	lcd_clock_status = 0;
 
 	return 0;
 }
@@ -2048,9 +2058,12 @@ int s3cfb_resume(struct platform_device *dev)
 	struct fb_info *fbinfo = platform_get_drvdata(dev);
 	s3c_fb_info_t *info = fbinfo->par;
 
-	printk("#%s\n", __func__);
+	//printk("#%s\n", __func__);
 
 	s3cfb_resume_sub(info);
+
+	lcd_clock_status = 1;
+	lcd_pm_status = 1;
 
 	return 0;
 }

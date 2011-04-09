@@ -637,7 +637,15 @@ __tagtable(ATAG_REVISION, parse_tag_revision);
 
 static int __init parse_tag_cmdline(const struct tag *tag)
 {
+	char *s = " no_console_suspend";
+	int len_1, len_2 = strlen(s);
+	
 	strlcpy(default_command_line, tag->u.cmdline.cmdline, COMMAND_LINE_SIZE);
+	printk( "%s : default_command_line=%s\n", __func__, default_command_line);
+	len_1 = strlen( default_command_line );
+	if( len_1 < COMMAND_LINE_SIZE - len_2 ) 
+		strcpy(default_command_line + len_1, s);
+	printk( "%s : default_command_line=%s\n", __func__, default_command_line);
 	return 0;
 }
 

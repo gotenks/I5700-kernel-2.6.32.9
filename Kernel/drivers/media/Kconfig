@@ -142,12 +142,27 @@ config USB_DABUSB
 	  module will be called dabusb.
 endif # DAB
 
+config USE_TOM3Q_DRIVERS
+	boolean "TOM3Q drivers"
+	depends on CPU_S3C6410
+	---help---
+	  Chooses TOM3Q graphics drivers instead of original ones
+
 if CPU_S3C6410
 source "drivers/media/s3c6410/mfc/Kconfig"
 source "drivers/media/s3c6410/pp/Kconfig"
 source "drivers/media/s3c6410/jpeg/Kconfig"
+
+if USE_TOM3Q_DRIVERS
+source "drivers/media/s3c6410/g3d-tom3q/Kconfig"
+source "drivers/media/s3c6410/g2d-tom3q/Kconfig"
+endif # TOM3Q_DRIVERS
+
+if !USE_TOM3Q_DRIVERS
 source "drivers/media/s3c6410/g3d/Kconfig"
 source "drivers/media/s3c6410/g2d/Kconfig"
+endif # TOM3Q_DRIVERS
+
 source "drivers/media/s3c6410/camera/Kconfig"
 source "drivers/media/s3c6410/cmm/Kconfig"
 endif

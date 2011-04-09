@@ -5,26 +5,33 @@ if [ "$CPU_JOB_NUM" = "" ] ; then
         CPU_JOB_NUM=8
 fi
 
-
 Usage()
 {
 echo "build_kernel.sh - building script android kernel"
-echo "  Usage: ./build_kernel.sh "
+echo "  Usage: ./build_kernel.sh <r880 | r880tom3q>"
 echo
 
 exit 1
 }
 
 OPTION=-k
-PRODUCT=r880
+#PRODUCT=r880
+PRODUCT=$1
 
 case "$PRODUCT" in
-	
-    r880)		
-                MODULES="multipdp dpram vibetonz dpram_recovery"
-                KERNEL_DEF_CONFIG=r880_android_defconfig
-                ;;
-    
+	r880*)
+		MODULES="multipdp dpram vibetonz dpram_recovery"
+
+		case "$PRODUCT" in
+			r880)
+				KERNEL_DEF_CONFIG=r880_android_defconfig
+			;;
+			r880tom3q)
+				KERNEL_DEF_CONFIG=r880_tom3q_defconfig
+			;;
+		esac 
+		;;
+		
 	*)
 		Usage
 		;;
@@ -71,6 +78,7 @@ build_modules()
 	if [ $? != 0 ] ; then
 	    exit 1
 	fi
+	#exit 1
 
 	for module in $MODULES
 	do

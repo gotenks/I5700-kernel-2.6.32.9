@@ -74,7 +74,7 @@ dir /data 0771 1000 1000
 dir   /system 0777 0 0
 dir   /system/etc 0755 0 0
 slink /etc /system/etc 0777 0 0
-file  /system/etc/ld.so.cache             ../initramfs/system/etc/ld.so.cache 0644 0 0
+#file  /system/etc/ld.so.cache             ../initramfs/system/etc/ld.so.cache 0644 0 0
 
 dir  /xbin     0755 0 0
 dir  /xbin/lib 0755 0 0

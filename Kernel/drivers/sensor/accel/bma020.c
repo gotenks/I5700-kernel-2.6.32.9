@@ -732,11 +732,12 @@ int bma020_read_accel_xyz(bma020acc_t * acc)
 
 #ifdef 	CONFIG_TARGET_LOCALE_VZW
 	if (HWREV == 0x9)
-	  acc->x = (-1)*(acc->x);
+		acc->x = (-1)*(acc->x);
 #endif	
 	//acc->x = (-1)*(acc->x);  
-	acc->y = (-1)*(acc->y);  
+	//acc->y = (-1)*(acc->y);  
 	acc->z = (-1)*(acc->z);
+
 	return comres;
 }
 

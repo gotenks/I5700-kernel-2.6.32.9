@@ -301,6 +301,7 @@ static inline void byte_align(unsigned long dest, unsigned long src)
 	}
 }
 
+#if 0
 static inline void _memcpy(void *p_dest, const void *p_src, int size)
 {
 	int i;
@@ -324,6 +325,53 @@ static inline void _memcpy(void *p_dest, const void *p_src, int size)
 			byte_align(dest+i, src+i);
 	}
 }
+#else
+static inline void _memcpy(void *p_dest, const void *p_src, int size)
+{
+	unsigned long dest = (unsigned long)p_dest;
+	unsigned long src = (unsigned long)p_src;
+
+	if (!(*onedram_sem)) {
+		printk("[OneDRAM] memory access without semaphore!: %d\n", *onedram_sem);
+		return;
+	}
+	if (size <= 0) {
+		return;
+	}
+
+	if (dest & 1) {
+		byte_align(dest, src);
+		dest++, src++;
+		size--;
+	}
+
+	if (size & 1) {
+		byte_align(dest + size - 1, src + size - 1);
+		size--;
+	}
+
+	if (src & 1) {
+		unsigned char *s = (unsigned char *)src;
+		volatile u16 *d = (unsigned short *)dest;
+
+		size >>= 1;
+
+		while (size--) {
+			*d++ = s[0] | (s[1] << 8);
+			s += 2;
+		}
+	}
+
+	else {
+		u16 *s = (u16 *)src;
+		volatile u16 *d = (unsigned short *)dest;
+
+		size >>= 1;
+
+		while (size--) { *d++ = *s++; }
+	}
+}
+#endif
 
 static inline int _memcmp(u16 *dest, u16 *src, int size)
 {

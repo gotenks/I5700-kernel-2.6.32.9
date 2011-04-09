@@ -31,6 +31,7 @@ static struct resource s3c_hsmmc2_resource[] = {
 		.end   = IRQ_HSMMC2,
 		.flags = IORESOURCE_IRQ,
 	}
+#if 0
 #if defined(CONFIG_MACH_INFOBOWLQ)
 	,
 	[2] = {
@@ -38,6 +39,7 @@ static struct resource s3c_hsmmc2_resource[] = {
 	.end   = IRQ_EINT(6),
 	.flags = IORESOURCE_IRQ,
 	}	
+#endif
 #endif
 };
 

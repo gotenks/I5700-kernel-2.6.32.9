@@ -896,7 +896,7 @@ static int s3c6410_pm_enter(suspend_state_t state)
 	pr_info("%s: WAKEUP_STAT(0x%08x), EINT0PEND(0x%08x)\n",
 			__func__, wakeup_stat, eint0pend);
 
-	s3c_config_wakeup_gpio();	
+	s3c_config_wakeup_gpio();
 
 	/* ok, let's return from sleep */
 	DBG("S3C6410 PM Resume (post-restore)\n");
@@ -922,8 +922,8 @@ static int s3c6410_pm_wake(suspend_state_t state)
 
 static struct platform_suspend_ops s3c6410_pm_ops = {
 	.enter		= s3c6410_pm_enter,
-	.prepare_late = s3c6410_pm_prepare_late,
-	.wake       = s3c6410_pm_wake,
+	.prepare_late 	= s3c6410_pm_prepare_late,
+	.wake 		= s3c6410_pm_wake,
 	.valid		= suspend_valid_only_mem,
 };
 

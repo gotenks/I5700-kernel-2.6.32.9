@@ -1056,11 +1056,11 @@ void mmc_rescan(struct work_struct *work)
 
 	ext_CD_int = readl(S3C64XX_GPNDAT);
 	ext_CD_int &= 0x40;	/* GPN6 */
-	if( system_rev >= 0x20 )
-		ext_CD_int = !ext_CD_int;
+	//if( system_rev >= 0x20 )
+	//	ext_CD_int = !ext_CD_int;
 
 	mmc_bus_get(host);
-    	pr_err("kimhyuns mmc_rescan hostindex=%d\n", host->index);
+    	pr_err("kimhyuns mmc_rescan : ext_CD_int=%d, host->index=%d, system_rev=%d\n", ext_CD_int, host->index, system_rev);
 
 	if (host->bus_ops == NULL) {
 	    pr_err("kimhyuns mmc_rescan host->bus_ops == NULL \n");
@@ -1082,6 +1082,7 @@ void mmc_rescan(struct work_struct *work)
 		/*
 		 * First we search for SDIO...
 		 */
+	printk(KERN_DEBUG "*** DEBUG : First we search for SDIO...(%d)***\n", host->index);
 		err = mmc_send_io_op_cond(host, 0, &ocr);
 		if (!err) {
 			if (mmc_attach_sdio(host, ocr))
@@ -1092,6 +1093,7 @@ void mmc_rescan(struct work_struct *work)
 		/*
 		 * ...then normal SD...
 		 */
+	printk(KERN_DEBUG "*** DEBUG : ...then normal SD...(%d) ***\n", host->index);
 		err = mmc_send_app_op_cond(host, 0, &ocr);
 		if (!err) {
 			if (mmc_attach_sd(host, ocr))
@@ -1102,6 +1104,7 @@ void mmc_rescan(struct work_struct *work)
 		/*
 		 * ...and finally MMC.
 		 */
+	printk(KERN_DEBUG "*** DEBUG : ...and finally MMC. (%d)***\n", host->index);
 		err = mmc_send_op_cond(host, 0, &ocr);
 		if (!err) {
 			if (mmc_attach_mmc(host, ocr))
@@ -1114,18 +1117,19 @@ void mmc_rescan(struct work_struct *work)
 	}
 	else 
 	{
-    pr_err("kimhyuns mmc_rescan else [%d]\n", g_rescan_retry);	
+    pr_err("kimhyuns mmc_rescan else 1 [%d], \n", g_rescan_retry);
 		if (host->bus_ops->detect && !host->bus_dead)
 			host->bus_ops->detect(host);
+    pr_err("kimhyuns mmc_rescan else 2 [%d], \n", g_rescan_retry);
 
 		mmc_bus_put(host);
 
-		if(host->index ==0 && g_rescan_retry)
+		if(host->index ==0 /*&& g_rescan_retry*/)
 		{
 			ext_CD_int = readl(S3C64XX_GPNDAT);
 			ext_CD_int &= 0x40;	/* GPN6 */
-			if( system_rev >= 0x20 )
-				ext_CD_int = !ext_CD_int;
+			//if( system_rev >= 0x20 )
+			//	ext_CD_int = !ext_CD_int;
 
 			if (!ext_CD_int)
 			{
@@ -1272,6 +1276,7 @@ out:
 		mmc_schedule_delayed_work(&host->detect, HZ);
 }
 #endif /* MBjgnoh 10.11.05 MMC Driver Remove */
+
 void mmc_start_host(struct mmc_host *host)
 {
 	mmc_power_off(host);
