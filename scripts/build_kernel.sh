@@ -123,13 +123,19 @@ build_kernel()
 		exit $?
 	fi
 
-	cp $KERNEL_DIR/drivers/net/wireless/bcm4325/dhd.ko   $KERNEL_DIR/../initramfs/lib/modules
-	cp $KERNEL_DIR/net/netfilter/xt_TCPMSS.ko            $KERNEL_DIR/../initramfs/lib/modules
-	cp $KERNEL_DIR/drivers/net/tun.ko                    $KERNEL_DIR/../initramfs/lib/modules
+#
+# 	add some modification for optimize
+#
+#	cp $KERNEL_DIR/drivers/net/wireless/bcm4325/dhd.ko   $KERNEL_DIR/../initramfs/lib/modules
+#	cp $KERNEL_DIR/net/netfilter/xt_TCPMSS.ko            $KERNEL_DIR/../initramfs/lib/modules
+#	cp $KERNEL_DIR/drivers/net/tun.ko                    $KERNEL_DIR/../initramfs/lib/modules
 
+	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/dpram.ko
 	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/dhd.ko
 	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/xt_TCPMSS.ko
 	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/tun.ko
+#	add old vibrator
+	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/vibrator.ko
  
 	make
 }
