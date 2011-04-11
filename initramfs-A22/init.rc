@@ -18,25 +18,35 @@ loglevel 3
     export SD_EXT_DIRECTORY /sd-ext
     export BOOTCLASSPATH /system/framework/core.jar:/system/framework/ext.jar:/system/framework/framework.jar:/system/framework/android.policy.jar:/system/framework/services.jar
     export TERMINFO /system/etc/terminfo
-    export _XXCFLAGS="-O3 -march=armv6kz -mtune=arm1176jzf-s -mcpu=arm1176jzf-s -mfpu=vfp -mfloat-abi=softfp --param l1-cache-size=16 --param l1-cache-line-size=32"
 
 # Backward compatibility
     symlink /system/etc /etc
     symlink /sys/kernel/debug /d
 
 # Kernel version
-    setprop ro.build.display.id "Gotenks Krnl-2.6.32.9 v1.0"
+    setprop ro.build.display.id "mKernel-v0.2"
 
 # insert modules
+#ifdef SLSI_S3C6410
     insmod /lib/modules/xsr.ko
     insmod /lib/modules/xsr_stl.ko
     insmod /lib/modules/rfs.ko
-
+#endif /* SLSI_S3C6410 */
     insmod /lib/modules/dpram.ko
     insmod /lib/modules/multipdp.ko
-
-    insmod /lib/modules/param.ko
+#ifdef SLSI_S3C6410
+    insmod /lib/modules/s3c_rotator.ko
+    insmod /lib/modules/s3c_mfc.ko
+    insmod /lib/modules/s3c_g2d_driver.ko
+    insmod /lib/modules/s3c_pp.ko
+    insmod /lib/modules/s3c_jpeg.ko
+    insmod /lib/modules/s3c_g3d.ko
+    insmod /lib/modules/s3c_cmm.ko
+    insmod /lib/modules/s3c_camera.ko
+#endif /* SLSI_S3C6410 */
     insmod /lib/modules/vibrator.ko
+    insmod /lib/modules/param.ko
+    insmod /lib/modules/qt5480.ko
 
 # create mountpoints
     mkdir /mnt 0775 root system
@@ -81,11 +91,9 @@ loglevel 3
     write /proc/sys/kernel/hung_task_timeout_secs 0
     write /proc/cpu/alignment 4
     write /proc/sys/kernel/sched_latency_ns 10000000
-    write /proc/sys/kernel/sched_min_granularity_ns 4000000
-    write /proc/sys/kernel/sched_wakeup_granularity_ns 4000000
-    write /proc/sys/kernel/sched_features 24188
+    write /proc/sys/kernel/sched_wakeup_granularity_ns 2000000
     write /proc/sys/kernel/sched_compat_yield 1
-    write /proc/sys/kernel/sched_child_runs_first 1
+    write /proc/sys/kernel/sched_child_runs_first 0
 
 # Create cgroup mount points for process groups
     mkdir /dev/cpuctl
@@ -106,35 +114,28 @@ loglevel 3
     # 5.0 %
     write /dev/cpuctl/bg_non_interactive/cpu.shares 52
 
-    # mount /xbin (busybox) early for Xmister's autofsck
+# mount mtd partitions (rfs/ext2/ext4 support)
+    chmod 0666 /dev/bml8
+
+    # /xbin (busybox) need it first
     mount squashfs /dev/bml8 /xbin ro loop
 
-# mount mtd partitions (rfs/ext2/ext4 support)
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
     # mount yaffs2 mtd@system /system 
     # mount yaffs2 mtd@system /system ro remount
-    mount rfs /dev/stl6 /system ro noatime nodiratime xattr,check=no
+    mount rfs /dev/stl6 /system ro xattr,check=no
     mount ext2 /dev/stl6 /system ro nodev noatime nodiratime
 
     # We chown/chmod /data again so because mount is run as root + defaults
     # mount yaffs2 mtd@userdata /data nosuid nodev
     # mount yaffs2 /dev/bml6 /data nosuid nodev
-    mount rfs /dev/stl5 /data nosuid nodev noatime nodiratime xattr,check=no
+    mount rfs /dev/stl5 /data nosuid nodev xattr,check=no
     mount ext2 /dev/stl5 /data nosuid nodev noatime nodiratime
-    mount ext4 /dev/stl5 /data nosuid nodev noatime nodiratime data=ordered barrier=1
+    mount ext4 /dev/stl5 /data nosuid nodev noatime nodiratime data=ordered
     chown system system /data
     chmod 0771 /data
     chmod 0666 /dev/log/radio
     chmod 0666 /dev/log/main
-
-    #Dynamic Soundfix (For compatibility to the old place)
-    exec /xbin/busybox sh -c "cat /system/xmister/soundfix > /proc/xmister/soundfix"
-
-    #Dynamic Undervolt (For compatibility to the old place)
-    exec /xbin/busybox sh -c "cat /system/xmister/undervolt > /proc/xmister/undervolt"
-
-    #Dynamic Audio Buffer (For compatibility to the old place)
-    exec /xbin/busybox sh -c "cat /system/xmister/buffer > /proc/xmister/buffer"
 
     #Dynamic Soundfix
     exec /xbin/busybox sh -c "cat /data/misc/xmister/soundfix > /proc/xmister/soundfix"
@@ -171,7 +172,7 @@ loglevel 3
 
     # Same reason as /data above
     # mount yaffs2 mtd@cache /cache nosuid nodev
-    mount rfs /dev/stl7 /cache nosuid nodev noatime nodiratime xattr,check=no
+    mount rfs /dev/stl7 /cache nosuid nodev xattr,check=no
     mount ext2 /dev/stl7 /cache nosuid nodev noatime nodiratime
     chown system cache /cache
     chmod 0770 /cache
@@ -201,11 +202,6 @@ loglevel 3
     chmod 0777 /dev/akm8973_aot
 #   chmod 0777 /dev/bma020
 #   chmod 0777 /dev/proximity
-
-    chmod 0666 /dev/bml8
-
-    # /xbin (busybox)
-    mount squashfs /dev/bml8 /xbin ro loop
 
 # create basic filesystem structure
     mkdir /data/misc 01771 system misc
@@ -295,7 +291,6 @@ loglevel 3
     setprop alsa.mixer.capture.bluetooth.a2dp "Capture"
 
 on boot
-
 # basic network init
     ifup lo
     hostname localhost
@@ -310,7 +305,7 @@ on boot
     setprop ro.VISIBLE_APP_ADJ 1
     setprop ro.SECONDARY_SERVER_ADJ 2
     setprop ro.BACKUP_APP_ADJ 2
-    setprop ro.HOME_APP_ADJ 1
+    setprop ro.HOME_APP_ADJ 4
     setprop ro.HIDDEN_APP_MIN_ADJ 7
     setprop ro.CONTENT_PROVIDER_ADJ 14
     setprop ro.EMPTY_APP_ADJ 15
@@ -425,11 +420,11 @@ on boot
 
 # Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
-    setprop net.tcp.buffersize.default 4096,87380,404480,4096,16384,404480
-    setprop net.tcp.buffersize.wifi    4096,87380,404480,4096,16384,404480
-    setprop net.tcp.buffersize.umts    4096,87380,404480,4096,16384,404480
-    setprop net.tcp.buffersize.edge    4096,26280,35040,4096,16384,35040
-    setprop net.tcp.buffersize.gprs    4096,8760,11680,4096,8760,11680
+    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.wifi    4095,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.umts    4094,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
+    setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
 
 #include extra init.rc for ch33kybutt
 import /system/etc/init.local.rc

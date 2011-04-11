@@ -479,7 +479,7 @@ static void infobowlq_set_qos(void) {
 	u32 reg;     							/* AXI sfr */     
 
 	reg = (u32) ioremap((unsigned long) S3C6410_PA_AXI_SYS, SZ_4K); /* QoS override: FIMD min. latency */
-	writel(0x2, S3C_VA_SYS + 0x128);  	    			/* AXI QoS */
+	writel(0xffb6, S3C_VA_SYS + 0x128);  	    			/* AXI QoS */
 	writel(0x7, reg + 0x460);   					/* (8 - MFC ch.) */
 	writel(0x7ff7, reg + 0x464);      				/* Bus cacheable */
 	writel(0x8ff, S3C_VA_SYS + 0x838);
