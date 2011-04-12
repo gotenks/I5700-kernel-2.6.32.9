@@ -659,6 +659,10 @@ __ATTR(_name, 0400, show_##_name, NULL)
 static struct freq_attr _name = \
 __ATTR(_name, 0644, show_##_name, store_##_name)
 
+#define define_one_rw0666(_name) \
+static struct freq_attr _name = \
+__ATTR(_name, 0666, show_##_name, store_##_name)
+
 define_one_ro0400(cpuinfo_cur_freq);
 define_one_ro(cpuinfo_min_freq);
 define_one_ro(cpuinfo_max_freq);
@@ -668,10 +672,10 @@ define_one_ro(scaling_driver);
 define_one_ro(scaling_cur_freq);
 define_one_ro(related_cpus);
 define_one_ro(affected_cpus);
-define_one_rw(scaling_min_freq);
-define_one_rw(scaling_max_freq);
-define_one_rw(scaling_governor);
-define_one_rw(scaling_setspeed);
+define_one_rw0666(scaling_min_freq);
+define_one_rw0666(scaling_max_freq);
+define_one_rw0666(scaling_governor);
+define_one_rw0666(scaling_setspeed);
 
 static struct attribute *default_attrs[] = {
 	&cpuinfo_min_freq.attr,
@@ -684,7 +688,7 @@ static struct attribute *default_attrs[] = {
 	&scaling_governor.attr,
 	&scaling_driver.attr,
 	&scaling_available_governors.attr,
-    &cpufreq_freq_attr_scaling_available_freqs,
+	&cpufreq_freq_attr_scaling_available_freqs,
 	&scaling_setspeed.attr,
 	NULL
 };
