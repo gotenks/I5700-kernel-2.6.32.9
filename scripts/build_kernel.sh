@@ -70,7 +70,7 @@ build_modules()
 	echo "*************************************"
 	echo
 
-	make -C $KERNEL_DIR ARCH=arm
+	#make -C $KERNEL_DIR ARCH=arm
 	if [ $? != 0 ] ; then
 	    exit 1
 	fi
@@ -104,7 +104,7 @@ build_kernel()
 	fi
 
 	#echo "make " -C $KERNEL_DIR ARCH=arm
-	make -C $KERNEL_DIR ARCH=arm
+	#make -C $KERNEL_DIR ARCH=arm
 	if [ $? != 0 ] ; then
 	    exit 1
 	fi
