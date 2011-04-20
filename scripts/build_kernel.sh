@@ -31,7 +31,7 @@ case "$PRODUCT" in
 			;;
 		esac 
 		;;
-		
+
 	*)
 		Usage
 		;;
@@ -70,7 +70,7 @@ build_modules()
 	echo "*************************************"
 	echo
 
-	#make -C $KERNEL_DIR ARCH=arm
+	make -C $KERNEL_DIR ARCH=arm $KERNEL_DEF_CONFIG	
 	if [ $? != 0 ] ; then
 	    exit 1
 	fi
@@ -97,14 +97,13 @@ build_modules()
 build_kernel()
 {
 	if [ ! -f $KERNEL_DIR/.config ] ; then
-        echo "kernel config missing, using default"
 		if [ ! -f $KERNEL_DIR/scripts/mod/modprobe ] ; then
 			prepare_kernel
 		fi
 	fi
 
-	#echo "make " -C $KERNEL_DIR ARCH=arm
-	#make -C $KERNEL_DIR ARCH=arm
+	#echo "make " -C $KERNEL_DIR ARCH=arm $KERNEL_DEF_CONFIG
+	make -C $KERNEL_DIR ARCH=arm $KERNEL_DEF_CONFIG
 	if [ $? != 0 ] ; then
 	    exit 1
 	fi
@@ -153,3 +152,4 @@ case "$OPTION" in
 esac 
 
 exit 0
+
