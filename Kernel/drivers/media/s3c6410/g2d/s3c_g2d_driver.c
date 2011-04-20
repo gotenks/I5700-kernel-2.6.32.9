@@ -670,17 +670,13 @@ static int s3c_g2d_ioctl(struct inode *inode, struct file *file, unsigned int cm
 	{
 		return -EFAULT;
 	}
-#if 0
+
 	if((params->src_work_width <= 1) || (params->src_work_height <= 1)|| 
 	  (params->dst_work_width <= 1) || (params->dst_work_height <= 1))
 	{
-#if 0
-		printk("#####%s::src_work_width %d src_work_height %d dst_work_width %d dst_work_height %d cmd %d\n",
-				__FUNCTION__, params->src_work_width, params->src_work_height, params->dst_work_width, params->dst_work_height, cmd);
-#endif
 		return -EFAULT;
-	}
-#endif	
+	}	
+
 	mutex_lock(h_rot_mutex);
 #ifdef USE_G2D_DOMAIN_GATING
 #ifndef USE_G2D_TIMER_FOR_CLK
