@@ -1,4 +1,3 @@
-
 on init
 
 sysclktz 0
@@ -25,7 +24,7 @@ loglevel 3
     symlink /sys/kernel/debug /d
 
 # Kernel version
-    setprop ro.build.display.id "mKernel-v0.2.3"
+    setprop ro.build.display.id "Gotenks Krnl-2.6.32.9 v1.0"
 
 # insert modules
     insmod /lib/modules/xsr.ko
@@ -111,7 +110,7 @@ loglevel 3
 
 # mount mtd partitions (rfs/ext2/ext4 support)
     # Mount /system rw first to give the filesystem a chance to save a checkpoint
-    # mount yaffs2 mtd@system /system 
+    # mount yaffs2 mtd@system /system
     # mount yaffs2 mtd@system /system ro remount
     mount rfs /dev/stl6 /system ro noatime nodiratime xattr,check=no
     mount ext2 /dev/stl6 /system ro nodev noatime nodiratime
@@ -148,7 +147,7 @@ loglevel 3
     # Create dump dir and collect dumps.
     # Do this before we mount cache so eventually we can use cache for
     # storing dumps on platforms which do not have a dedicated dump partition.
-   
+
     mkdir /data/dontpanic
     chown root log /data/dontpanic
     chmod 0750 /data/dontpanic
@@ -227,8 +226,8 @@ loglevel 3
 # for AppsOnSD keystore
     mkdir /data/misc/systemkeys 700 system system
 
-    # create log system 
-    mkdir /data/log  0777 root root 
+    # create log system
+    mkdir /data/log  0777 root root
     chmod 0777 /data/log
 
     # create dalvik-cache and double-check the perms
@@ -386,7 +385,7 @@ on boot
 
     chmod 0777 /data/lmfilter.txt
     chmod 0777 /data/eqfilter.txt
-    chmod 0777 /data/situation.txt 
+    chmod 0777 /data/situation.txt
     chmod 0777 /data/stream_headset.txt
     chmod 0777 /data/stream_speaker.txt
 # bootsnd
@@ -412,7 +411,7 @@ on boot
     chmod 0777 /sys/class/rfkill/rfkill0/state
     chmod 0777 /sys/class/rfkill/rfkill1/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/state 
+    chown bluetooth bluetooth /sys/class/rfkill/rfkill1/state
 
 #
 # turn off BT radio, due fix first BT turn on
@@ -444,7 +443,7 @@ service console /system/bin/sh
     console
 
 # add 2009.12.01
-# akmd service 
+# akmd service
 # compass etc
 #
 # Thanks to DE-NISkA!
@@ -524,7 +523,7 @@ service ril-daemon /system/bin/rild
 #	user root
 #
 #service mobex-daemon /system/bin/npsmobex
-#	user root 
+#	user root
 
 service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
     socket zygote stream 666
@@ -654,3 +653,4 @@ service compcache /system/bin/handle_compcache
     user root
     group root
     oneshot
+
