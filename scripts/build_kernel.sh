@@ -90,9 +90,7 @@ build_modules()
 		    cp ./*.ko  $KERNEL_DIR/../initramfs/lib/modules
 		fi
 	done 
-
 }
-
 
 build_kernel()
 {
@@ -133,7 +131,6 @@ build_kernel()
  
 	make
 }
-
 
 
 case "$OPTION" in
