@@ -70,7 +70,7 @@ build_modules()
 	echo "*************************************"
 	echo
 
-	make -C $KERNEL_DIR ARCH=arm $KERNEL_DEF_CONFIG	
+	#make -C $KERNEL_DIR ARCH=arm
 	if [ $? != 0 ] ; then
 	    exit 1
 	fi
@@ -95,13 +95,14 @@ build_modules()
 build_kernel()
 {
 	if [ ! -f $KERNEL_DIR/.config ] ; then
+        echo "kernel config missing, using default"
 		if [ ! -f $KERNEL_DIR/scripts/mod/modprobe ] ; then
 			prepare_kernel
 		fi
 	fi
 
-	#echo "make " -C $KERNEL_DIR ARCH=arm $KERNEL_DEF_CONFIG
-	make -C $KERNEL_DIR ARCH=arm $KERNEL_DEF_CONFIG
+	#echo "make " -C $KERNEL_DIR ARCH=arm
+	#make -C $KERNEL_DIR ARCH=arm
 	if [ $? != 0 ] ; then
 	    exit 1
 	fi
@@ -121,13 +122,19 @@ build_kernel()
 		exit $?
 	fi
 
-	cp $KERNEL_DIR/drivers/net/wireless/bcm4325/dhd.ko   $KERNEL_DIR/../initramfs/lib/modules
-	cp $KERNEL_DIR/net/netfilter/xt_TCPMSS.ko            $KERNEL_DIR/../initramfs/lib/modules
-	cp $KERNEL_DIR/drivers/net/tun.ko                    $KERNEL_DIR/../initramfs/lib/modules
+#
+# 	add some modification for optimize
+#
+#	cp $KERNEL_DIR/drivers/net/wireless/bcm4325/dhd.ko   $KERNEL_DIR/../initramfs/lib/modules
+#	cp $KERNEL_DIR/net/netfilter/xt_TCPMSS.ko            $KERNEL_DIR/../initramfs/lib/modules
+#	cp $KERNEL_DIR/drivers/net/tun.ko                    $KERNEL_DIR/../initramfs/lib/modules
 
+	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/dpram.ko
 	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/dhd.ko
 	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/xt_TCPMSS.ko
 	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/tun.ko
+#	add old vibrator
+	$CTNG_BIN_DIR/arm-spica-linux-uclibcgnueabi-strip -g $KERNEL_DIR/../initramfs/lib/modules/vibrator.ko
  
 	make
 }
